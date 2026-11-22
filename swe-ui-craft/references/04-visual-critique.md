@@ -35,5 +35,13 @@ Inspecciona visualmente las imágenes PNG en `wide` (`1920×1080`), `desktop` (`
 
 ---
 
-## 4. Ciclo obligatorio de cierre
-**Capturar -> Listar fallos concretos de identidad/layout/acabado -> Corregir -> Re-capturar y confirmar visualmente** antes de declarar la interfaz terminada.
+## 4. Formato accionable por captura y ciclo de cierre
+No te limites a listar síntomas abstractos (*"se ve genérico"* o *"el espaciado es mejorable"*). Registra cada hallazgo visual con acción concreta:
+
+```text
+[Ruta / Viewport / Tema] -> Fallo observado -> Cambio exacto (componente/selector/propiedad)
+Ejemplo: [/cookies · 1440x900 · dark] -> El footer queda flotando con 320px vacíos debajo -> Aplicar `min-height: 100dvh; display: flex; flex-direction: column` en `#root` y `flex: 1` en `main`.
+Ejemplo: [/ · 390x844 · light] -> El banner de cookies cubre el botón CTA primario -> Reducir padding vertical del banner y convertirlo en barra compacta inferior con margen seguro en `main`.
+```
+
+**Ciclo obligatorio:** Capturar -> Documentar hallazgos en este formato -> Aplicar correcciones -> Re-capturar y confirmar visualmente antes de cerrar.

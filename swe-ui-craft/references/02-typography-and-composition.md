@@ -31,6 +31,6 @@ Las reglas de esta guía no son una plantilla única: son herramientas para trad
 
 ---
 
-## 4. Fundamentos modernos de layout y rendimiento visual
-* **Sticky footer `100dvh` obligatorio:** usa `min-height: 100dvh; display: flex; flex-direction: column;` en el contenedor raíz y `main { flex: 1; }` para que el `<footer>` **nunca flote** a mitad de pantalla en páginas cortas (`/login`, `/cookies`, `/404`).
-* **Responsive real (no solo cero overflow):** diseña proporciones conscientes en `390px`, `768px`, `1440px` y `1920px`; apoya los componentes modernos en `dvh`/`svh`, Container Queries, `<dialog>` nativo, `:has()` y ***code splitting* por ruta** para mantener una carga inicial ligera.
+## 4. Integridad de layout en distintos tamaños de pantalla
+* **Páginas cortas con pie de página:** cuando el diseño incluya un `<footer>` tradicional, evita que quede flotando en vistas cortas (`/login`, `/cookies`, `/404`) aplicando `min-height: 100dvh; display: flex; flex-direction: column;` y `main { flex: 1; }` (omitir en interfaces *full-screen* tipo editor, mapa o canvas sin pie de página).
+* **Responsive real (no solo cero overflow):** diseña proporciones conscientes en `390px`, `768px`, `1440px` y `1920px`; apoya los componentes adaptables en unidades `dvh`/`svh`, Container Queries y `:has()` cuando el layout lo necesite. *(Las decisiones de rendimiento técnico como *code splitting* o caché viven en `swe-data-apis`.)*

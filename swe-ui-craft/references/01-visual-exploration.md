@@ -1,41 +1,39 @@
-# 01 — Exploración Visual y Decisión de Dirección (Antes de Codificar)
+# 01 — Exploración Visual Proporcional y Decisión de Dirección
 
-El diseño genérico ocurre cuando se salta directamente del requisito al CSS usando el primer estilo que viene a la mente. Ejecuta este proceso breve antes de crear el primer componente visual.
+El diseño genérico ocurre cuando se salta directamente del requisito al CSS usando el primer estilo que viene a la mente. Ajusta la profundidad de exploración al tamaño real del encargo.
 
 ---
 
 ## 1. Escribir la Tesis Visual (2–3 líneas)
 Responde con precisión para **este** producto específico:
-* **Quién lo usa y en qué estado mental:** (ej. estudiante con presión de tiempo, operador contable revisando 80 filas, comprador comparando precios en móvil).
-* **Qué contenido manda en pantalla:** (texto largo, números/tablas, fotografía, formularios, canvas interactivo).
-* **Qué debe sentir el usuario en 3 segundos:** (calma y claridad, velocidad quirúrgica, calidez editorial, confianza institucional).
+* **Quién lo usa y en qué estado mental:** (ej. persona bajo presión de tiempo, operador revisando decenas de registros, usuario comparando opciones desde móvil).
+* **Qué contenido manda en pantalla:** (lectura larga, tablas/números, fotografía/media, formularios, espacio de trabajo interactivo).
+* **Qué debe percibir el usuario en 3 segundos:** (claridad serena, velocidad operativa, cercanía, rigor técnico).
 
-*Ejemplo bueno:* «Herramienta operativa diaria para soporte; prioridad a escanear tablas densas, detectar urgencias por contraste limpio y corregir registros con teclado sin decoración que robe espacio».
-*Ejemplo malo (vago):* «Diseño moderno, limpio, premium y minimalista».
+*Evita fórmulas vacías* como «moderno, limpio, premium y minimalista».
 
 ---
 
-## 2. Proponer 3 direcciones visuales realmente distintas
-Presenta **3 opciones contrastantes** antes de implementar. Deben diferir en **estructura y ritmo**, no solo en cambiar azul por verde:
+## 2. Calibrar exploración: 1 propuesta vs. 2–3 direcciones
+* **Marca existente, ajuste puntual o contexto ya claro:** formula **1 dirección bien razonada** alineada a la identidad actual y avanza sin frenar al usuario con preguntas innecesarias.
+* **Producto nuevo sin identidad definida o rediseño mayor:** propone **2–3 direcciones sustancialmente distintas** antes de implementar.
 
-| Dimensión | Dirección A | Dirección B | Dirección C |
-| :--- | :--- | :--- | :--- |
-| **Metáfora / Carácter** | Ej. Cuaderno editorial estructurado | Ej. Instrumento técnico de alta densidad | Ej. Estudio enfocado de una sola columna |
-| **Composición dominante** | Asimétrica con aire y líneas divisorias | Sidebar fija + tabla/panel operativo | Flujo central sin cromado extra |
-| **Tipografía y ritmo** | Display con carácter + cuerpo legible | Sans geométrica compacta + mono tabular | Sistema tipográfico sobrio de alto contraste |
-| **Superficies** | Papel cálido + bordes `1px` sin tarjetas anidadas | Fondo neutro frío + elevación mínima | Alto contraste monocromo + 1 acento táctico |
-| **Referencia razonada** | Qué principio concreto se adopta **y cuál se descarta** | Qué principio se adopta **y cuál se descarta** | Qué principio se adopta **y cuál se descarta** |
+### Regla de diferenciación sustancial (evitar falsas alternativas)
+Cada propuesta debe derivar del dominio del producto —**no** reciclar arquetipos fijos— y cambiar **al menos 2 dimensiones estructurales** frente a las demás:
+1. **Arquitectura de página:** (ej. flujo vertical continuo vs. panel dividido vs. barra de comandos/navegación lateral vs. lienzo completo).
+2. **Densidad y ritmo:** (amplio respiro de lectura vs. alta densidad escaneable vs. enfoque progresivo paso a paso).
+3. **Elemento protagonista:** (tipografía/texto vs. datos/gráficos en vivo vs. producto/imagen real vs. herramienta interactiva directa).
+4. **Tratamiento de superficies y color:** (alto contraste sobrio, capas tonales suaves, divisores tipográficos sin recuadros, etc.).
 
 ### Regla para analizar referencias (evitar imitación superficial)
-Nunca escribas solo *"inspirado en Stripe / Linear / Apple"*. Para cada referencia explica en 2 líneas:
-1. **Qué principio se extrae:** (ej. jerarquía por peso y bordes finos sin sombras pesadas; encabezados de sección alineados a la izquierda).
-2. **Qué se descarta intencionalmente:** (ej. se descarta el fondo oscuro con brillos decorativos porque nuestro producto se lee en salones iluminados durante sesiones de 40 minutos).
+Elige 1–2 referencias **pertinentes al dominio o a una tarea equivalente** (no cites siempre las mismas 3 marcas SaaS para cualquier producto) y explicita:
+1. **Qué principio estructural se adopta** y cómo resuelve una necesidad real de este producto.
+2. **Qué se descarta intencionalmente** porque no encaja con el usuario, el entorno de uso o el presupuesto.
 
 ---
 
 ## 3. Cerrar el contrato compacto (`DESIGN_DIRECTION.md`, máx. 40 líneas)
-Una vez elegida la dirección con el usuario, documenta:
-* **Tesis visual elegida** y motivo de descarte de las otras dos.
-* **Tokens base** (tipografía, escala espacial, colores semánticos y de superficie en claro/oscuro).
+* **Tesis visual elegida** y razones explícitas de la decisión (y por qué se descartaron alternativas si hubo exploración múltiple).
+* **Tokens base** (tipografía, escala espacial, colores de superficie/acento/estado).
 * **Patrones que SÍ definen este producto** (3–5 decisiones concretas).
-* **Patrones PROHIBIDOS en este proyecto** (ej. *"sin cuadrículas de 3 tarjetas con icono circular"*, *"sin gradientes neón"*, *"sin animaciones >250ms en navegación"*).
+* **Patrones PROHIBIDOS en este proyecto** (antipatrones concretos que el agente no debe introducir).

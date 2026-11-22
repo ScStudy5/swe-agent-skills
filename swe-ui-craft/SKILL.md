@@ -26,26 +26,28 @@ Aplica esta skill cuando diseñes, rediseñes o evalúes la calidad visual, comp
 
 ## Flujo de trabajo en 4 fases
 
-### Fase 1 — Exploración visual antes de codificar (obligatoria en UI nueva o rediseño)
+### Fase 1 — Exploración visual proporcional antes de codificar
 Lee [01-visual-exploration.md](./references/01-visual-exploration.md):
 1. Redacta una **Tesis Visual** de 2–3 líneas derivada del producto (usuario, contexto, contenido dominante y sensación objetivo).
-2. Presenta **3 direcciones visuales realmente distintas** (distinta composición, densidad, tipografía, tratamiento del contenido y 1–2 referencias razonadas indicando **qué principio se adopta y qué se descarta** — nunca la misma pantalla con otros colores).
-3. Elige 1 dirección junto con el usuario y guarda un contrato compacto (`DESIGN_DIRECTION.md`, <40 líneas) con **qué patrones SÍ usar** y **qué patrones PROHIBIR** en este proyecto.
+2. Calibra el alcance según el contexto:
+   * **Producto nuevo sin identidad definida o rediseño mayor:** presenta **2–3 direcciones visuales sustancialmente distintas** (cambiando al menos 2 dimensiones estructurales: arquitectura de página, densidad o elemento protagonista — nunca solo colores/fuentes) con referencias pertinentes del dominio o tarea equivalente indicando **qué principio se adopta y qué se descarta**. Confirma elección con el usuario solo si la dirección no está clara.
+   * **Marca existente, cambio acotado o contexto ya suficiente:** define **1 propuesta bien razonada** y avanza directamente sin frenar el flujo con preguntas innecesarias.
+3. Deja un contrato compacto (`DESIGN_DIRECTION.md`, <40 líneas) con **qué patrones SÍ usar** y **qué patrones PROHIBIR** en este proyecto.
 
 ### Fase 2 — Tipografía, composición y superficies con intención
 Lee [02-typography-and-composition.md](./references/02-typography-and-composition.md):
-1. Elige la estructura que mejor sirva al contenido real (lista editorial, tabla operativa densa, lienzo enfocado, barra lateral fija, etc.) sin imponer tarjetas ni *bento* por defecto.
-2. Define tokens del proyecto (tipografía, escala de espaciado, superficies, bordes, contraste óptico), garantiza `min-height: 100dvh` con *sticky footer* en páginas cortas y aplica *code splitting* por ruta.
+1. Elige la estructura que mejor sirva al contenido real sin imponer tarjetas ni *bento* por defecto.
+2. Define tokens del proyecto (tipografía, escala de espaciado, superficies, bordes y contraste óptico) y evita fallos de layout en páginas cortas o monitores amplios cuando el diseño incluya pie de página o contenedores centrados.
 
 ### Fase 3 — Movimiento y microinteracciones con oficio
 Lee [03-motion-craft.md](./references/03-motion-craft.md):
-1. Decide primero **qué NO animar** (interacciones de alta frecuencia como navegación de teclado, filtros rápidos o cambio frecuente de pestañas deben ser instantáneas o `<= 150ms`).
+1. Decide primero **qué NO animar** (interacciones de alta frecuencia como navegación de teclado, filtros rápidos o cambio frecuente de pestañas deben ser instantáneas o **`0–120ms`**).
 2. Aplica juicios concretos: entradas *origin-aware* (`scale(0.96 -> 1)` + `opacity`), compresión táctil sutil (`scale(0.97)`), animaciones interrumpibles solo en `transform`/`opacity` y respeto estricto a `prefers-reduced-motion`.
 
 ### Fase 4 — Crítica visual de identidad sobre capturas reales
 Lee [04-visual-critique.md](./references/04-visual-critique.md):
-1. Captura la interfaz en ejecución con `swe-browser-audit` (`--screenshots-dir .audit-screenshots --color-scheme both`) en `wide` (`1920×1080`), `desktop` (`1440×900`), `tablet` (`768×1024`) y `mobile` (`390×844`), incluyendo al menos una página corta (`/login`, `/cookies` o `/404`).
-2. Inspecciona las imágenes evaluando **identidad, ritmo, jerarquía del contenido, acabado óptico y ausencia de clichés** (además de overflow/contraste), corrige y vuelve a capturar antes de dar por cerrada la entrega.
+1. Captura la interfaz en ejecución con `swe-browser-audit` (`--screenshots-dir .audit-screenshots --color-scheme both`) en `wide` (`1920×1080`), `desktop` (`1440×900`), `tablet` (`768×1024`) y `mobile` (`390×844`), incluyendo rutas principales y vistas cortas cuando existan.
+2. Inspecciona las imágenes evaluando **identidad, ritmo, jerarquía del contenido y acabado óptico**, redacta cada corrección con evidencia concreta (`[Ruta/Viewport] -> Fallo -> Cambio exacto`), corrige y vuelve a capturar antes de cerrar.
 
 ## Criterios de verificación
 * La dirección visual deriva de una tesis del producto y fue elegida entre alternativas distintas (no una plantilla transversal repetida).

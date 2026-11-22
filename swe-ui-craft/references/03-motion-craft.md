@@ -13,7 +13,7 @@ Inspirado en principios de *Design Engineering* (*Agents with Taste* / *Animatio
 ## 2. Juicios concretos de duración, escala y curvas
 | Tipo de interacción | Duración recomendada | Curva / comportamiento |
 | :--- | :---: | :--- |
-| **Feedback táctil en botones** (`:active`) | `100–150ms` | Ligera compresión (`transform: scale(0.97)`) que da respuesta física inmediata. |
+| **Feedback táctil en botones** (`:active`) | `0–120ms` | Ligera compresión (`transform: scale(0.97)`) que da respuesta física inmediata sin retrasar acciones frecuentes. |
 | **Hover / cambio de estado sutil** | `120–160ms` | `ease-out` sobre color, borde o elevación discreta (`translateY(-1px)`). |
 | **Popovers, dropdowns y tooltips** | `150–200ms` | **Consciente del origen (*origin-aware*):** `transform-origin` hacia el disparador + `scale(0.96 -> 1)` + `opacity: 0 -> 1` con `cubic-bezier(0.16, 1, 0.3, 1)`. |
 | **Modales y drawers** | `200–260ms` | Entrada con `ease-out`; salida ligeramente más rápida (`150–180ms`) con `ease-in`. Nunca superar `350–400ms`. |
