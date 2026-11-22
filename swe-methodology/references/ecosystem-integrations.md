@@ -1,6 +1,6 @@
 # Integración del Ecosistema y Extensiones Opcionales
 
-Las 13 skills `swe-*` forman una base completa y autocontenida. Cuando el entorno tenga herramientas o skills adicionales instaladas, sigue estas reglas para potenciar la calidad **sin generar conflictos ni sobrecargar el contexto**.
+Las 14 skills `swe-*` forman una base completa y autocontenida. Cuando el entorno tenga herramientas o skills adicionales instaladas, sigue estas reglas para potenciar la calidad **sin generar conflictos ni sobrecargar el contexto**.
 
 ---
 
@@ -8,8 +8,8 @@ Las 13 skills `swe-*` forman una base completa y autocontenida. Cuando el entorn
 
 | Herramienta / Skill | Cuándo usarla | Qué aporta | Si NO está instalada |
 | :--- | :--- | :--- | :--- |
-| **`modern-web-guidance`** | **Antes** de diseñar o modificar UI web (HTML, CSS, formularios, modales, animaciones, CWV, sanitización) | Patrones web modernos actuales y evita diseños genéricos o CSS/APIs obsoletas | Aplicar las reglas de `swe-ux-accessibility` |
-| **`Context7` (`context7-mcp`)** | **Antes** de generar código que dependa de frameworks o librerías (React, Next.js, Tailwind, Prisma, Supabase, FastAPI, etc.) | Consulta documentación oficial exacta de la versión actual del proyecto | Verificar versiones en `package.json`/`pyproject.toml` y documentación oficial |
+| **`modern-web-guidance`** | **Antes** de implementar interacciones web técnicas (HTML, `<dialog>`, Popover, formularios, CSS moderno, CWV, compatibilidad) | Patrones web modernos evaluados por tarea y compatibilidad técnica (complementa, no sustituye, la exploración visual de `swe-ui-craft`) | Aplicar las guías de `swe-ux-accessibility` y `swe-ui-craft` |
+| **`Context7` (`context7-mcp`)** | **Antes** de generar código que dependa de frameworks o librerías (React, Next.js, Tailwind, Prisma, Supabase, FastAPI, etc.) | Consulta documentación oficial exacta de la versión actual del proyecto (consulta técnica; no define criterio estético) | Verificar versiones en `package.json`/`pyproject.toml` y documentación oficial |
 
 ---
 

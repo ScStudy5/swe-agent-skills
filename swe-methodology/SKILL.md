@@ -62,7 +62,8 @@ Consulta la matriz en [standards-and-tools.md](./references/standards-and-tools.
    * Seguridad, privacidad, licencias y cadena de suministro -> `swe-security-privacy`
    * Pruebas y QA -> `swe-qa-testing`
    * Auditoría dinámica y seguridad en navegador (Playwright) -> `swe-browser-audit`
-   * UX/UI, responsive, accesibilidad y analítica -> `swe-ux-accessibility`
+   * Dirección visual anti-genérica, tipografía, composición, movimiento y crítica estética -> `swe-ui-craft`
+   * Estrategia UX, responsive, accesibilidad WCAG 2.2 AA, errores UI, SEO e i18n -> `swe-ux-accessibility`
    * Bases de datos, APIs, concurrencia y rendimiento -> `swe-data-apis`
    * Git, CI/CD, infraestructura, incidentes y FinOps -> `swe-devops-operations`
    * Aplicaciones con IA / LLMs / agentes en producto -> `swe-ai-engineering`

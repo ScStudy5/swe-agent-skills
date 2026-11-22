@@ -1,12 +1,12 @@
 # Software Engineering Agent Skills (`swe-*`)
 
-Colección de **13 skills modulares e independientes** de buenas prácticas de ingeniería de software, calibradas para llevar proyectos desde **1. MVP**, pasando por **2. Profesional (miles de usuarios)** hasta **3. Empresarial**, con seguridad fuerte, flujo GitHub completo, cumplimiento legal base, flujo ordenado con agentes IA, pruebas en vivo y entrega formal (*handover*).
+Colección de **14 skills modulares e independientes** de buenas prácticas de ingeniería de software, calibradas para llevar proyectos desde **1. MVP**, pasando por **2. Profesional (miles de usuarios)** hasta **3. Empresarial**, con seguridad fuerte, flujo GitHub completo, cumplimiento legal base, flujo ordenado con agentes IA, dirección visual/oficio UI, pruebas en vivo y entrega formal (*handover*).
 
 Escritas bajo el estándar abierto **Agent Skills (`SKILL.md`)**, compatibles con **Antigravity**, **Claude Code**, **OpenAI Codex**, **Cursor**, **OpenCode** y **Gemini CLI**.
 
 ---
 
-## Skills incluidas (13)
+## Skills incluidas (14)
 
 | Skill | Área que cubre | Cuándo usarla |
 | :--- | :--- | :--- |
@@ -16,7 +16,8 @@ Escritas bajo el estándar abierto **Agent Skills (`SKILL.md`)**, compatibles co
 | `swe-architecture-design` | Arquitectura, SOLID/DRY/KISS/YAGNI, Clean Architecture, DDD, patrones de resiliencia (Circuit Breaker/Bulkhead), portabilidad (sin Vendor Lock-in), calidad de código, linting y refactoring | Al diseñar arquitectura, crear ADRs o auditar estructura y calidad del código |
 | `swe-security-privacy` | DevSecOps, SSDLC, Threat Modeling, OWASP Top 10/ASVS, autenticación/sesiones (anti-enumeración, revocación, MFA), autorización (**IDOR/BOLA**), **Row Level Security (RLS/BaaS)**, cifrado, privacidad (ARCO/LFPDPPP), licencias OSS/PI y cadena de suministro (SBOM/SCA) | Al diseñar flujos sensibles, revisar vulnerabilidades/RLS, gestionar secretos/dependencias/licencias o validar privacidad |
 | `swe-qa-testing` | Estrategia de pruebas, pirámide de testing, 25 tipos de pruebas (Unit, Integration, E2E, Contract, Load, Security, Mutation, Fuzz, Chaos, LLM Evals, etc.) e higiene previa a producción (*Release Hygiene*) | Al definir estrategia QA, auditar suite de pruebas, validar higiene de release o escribir planes y casos de prueba |
-| `swe-ux-accessibility` | Estrategia UX (investigación con usuarios, flujos, heurísticas), dirección visual anti-genérica (referencias, Design Tokens de tipografía, espaciado, color y animaciones), diseño responsive (Mobile First), accesibilidad WCAG 2.2 AA / WAI-ARIA, SEO público, RUM/analítica ética, compatibilidad, i18n/l10n y crítica visual con Playwright | Al investigar, diseñar, construir o auditar interfaces web/móviles, dirección visual, contraste, teclado, SEO y localización |
+| `swe-ui-craft` | Dirección visual anti-genérica y *Design Engineering* en 4 micro-guías por tarea: exploración visual (tesis visual + 3 direcciones distintas antes de codificar), tipografía/composición guiada por contenido (`100dvh` sticky footer, *code splitting*), movimiento/microinteracciones (estilo Emil Kowalski) y crítica visual de identidad sobre capturas reales de Playwright | Al definir la identidad visual de una interfaz, diseñar/rediseñar pantallas, ajustar animaciones o auditar calidad estética |
+| `swe-ux-accessibility` | Estrategia UX (investigación con usuarios, *User Flows*, 10 heurísticas de Nielsen), diseño responsive (Mobile First, 4 estados de UI, preservación de formularios, `ErrorBoundary` + vistas `400`/`403`/`404`/`500`/`503`), accesibilidad WCAG 2.2 AA / WAI-ARIA, SEO público, RUM/analítica ética, compatibilidad e i18n/l10n | Al investigar flujos UX, construir formularios/estados, auditar accesibilidad, configurar SEO público o localización |
 | `swe-data-apis` | Diseño de BD, normalización, **RLS y permisos de Storage**, concurrencia/pagos/webhooks/DLQ, migraciones compatibles hacia atrás, RTO/RPO, backups (*off-site* + restauración probada), REST/OpenAPI, Problem Details (RFC 9457) y rendimiento | Al modelar bases de datos, revisar RLS/backups, diseñar APIs/pagos y resolver cuellos de botella o consultas N+1 |
 | `swe-devops-operations` | Git (GitHub Flow / Trunk-Based / Git Flow, Conventional Commits, Rulesets/`gh CLI`), CI/CD endurecido por SHA (CI, CD con Environments/OIDC, Releases SemVer, CodeQL, Dependabot, validación PRs, `CODEOWNERS`, `.gitattributes`, Issue Forms), Docker/IaC/Kubernetes, protección perimetral (**DDoS/bots/WAF**), incidentes/postmortem, observabilidad (Sentry, Uptime Kuma, Grafana), DORA y FinOps (topes duros y *kill switch*) | Al configurar repositorios GitHub, pipelines CI/CD, contenedores, despliegues, monitoreo, protección de tráfico y costos en nube |
 | `swe-ai-engineering` | Seguridad y gobernanza de IA/LLMs en producto (NIST AI RMF, ISO 42001), prompt injection, alucinaciones, sesgos, Human-in-the-loop, versionado de prompts/modelos, evals, **protección contra bucles recursivos/iteraciones/concurrencia en agentes** y topes estrictos de costos | Al diseñar, auditar o probar funciones de producto con LLMs, RAG, agentes o tool calling |
@@ -28,7 +29,7 @@ Escritas bajo el estándar abierto **Agent Skills (`SKILL.md`)**, compatibles co
 
 ## Instalación
 
-Puedes instalar **todas las 13 skills** o copiar únicamente las carpetas `swe-*` que necesites.
+Puedes instalar **todas las 14 skills** o copiar únicamente las carpetas `swe-*` que necesites.
 
 ### Opción 1 — Instalación rápida con `skills` CLI (recomendado)
 
