@@ -34,10 +34,10 @@ Puedes instalar **todas las 13 skills** o copiar únicamente las carpetas `swe-*
 
 ```bash
 # Instalar todas las skills del repositorio
-npx skills add sc-caissa/swe-agent-skills
+npx skills add ScStudy5/swe-agent-skills
 
 # O instalar solo una skill específica
-npx skills add sc-caissa/swe-agent-skills --skill swe-ai-workflow
+npx skills add ScStudy5/swe-agent-skills --skill swe-ai-workflow
 ```
 
 ### Opción 2 — Instalación por proyecto (`.agents/skills/`, estándar compartido)
@@ -46,7 +46,7 @@ Ideal para compartir las mismas skills con todo el equipo dentro del repositorio
 
 **Linux / macOS (Bash):**
 ```bash
-git clone --depth 1 https://github.com/sc-caissa/swe-agent-skills.git /tmp/swe-agent-skills
+git clone --depth 1 https://github.com/ScStudy5/swe-agent-skills.git /tmp/swe-agent-skills
 mkdir -p .agents/skills
 cp -r /tmp/swe-agent-skills/swe-* .agents/skills/
 rm -rf /tmp/swe-agent-skills
@@ -54,7 +54,7 @@ rm -rf /tmp/swe-agent-skills
 
 **Windows (PowerShell):**
 ```powershell
-git clone --depth 1 https://github.com/sc-caissa/swe-agent-skills.git "$env:TEMP\swe-agent-skills"
+git clone --depth 1 https://github.com/ScStudy5/swe-agent-skills.git "$env:TEMP\swe-agent-skills"
 New-Item -ItemType Directory -Force -Path ".agents\skills" | Out-Null
 Copy-Item -Recurse -Force "$env:TEMP\swe-agent-skills\swe-*" ".agents\skills\"
 Remove-Item -Recurse -Force "$env:TEMP\swe-agent-skills"
