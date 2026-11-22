@@ -38,7 +38,7 @@ Revisa el proyecto sistemáticamente en 5 capas:
 ### 3. Generar artefactos de seguridad y cumplimiento
 Genera cuando se soliciten:
 * Matriz de amenazas (*Threat Model*) y controles mitigantes.
-* Política `SECURITY.md` y procedimiento de respuesta ante vulnerabilidades críticas.
+* Política `SECURITY.md`, página pública `/seguridad`, archivo estándar **`/.well-known/security.txt` (RFC 9116)** y procedimiento de respuesta ante vulnerabilidades críticas.
 * Checklist de revisión basado en **OWASP ASVS 5.0** / **NIST SSDF** adaptado al nivel del proyecto.
 * Reglas/pasos de CI para **SAST** (CodeQL, Semgrep, SonarQube), **Secret Scanning** (Gitleaks), **Container Scanning** (Trivy) y **SBOM**.
 

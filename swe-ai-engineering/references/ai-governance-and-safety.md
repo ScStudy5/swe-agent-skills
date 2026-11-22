@@ -25,7 +25,7 @@
   * No permitir jamás que la IA acceda libremente a **operaciones administrativas** sin validación estricta en backend y confirmación humana.
 * **Resiliencia controlada:** configurar **timeouts** estrictos, evitar **reintentos infinitos**, usar **backoff exponencial con *jitter*** solo en errores transitorios y prever fallback de modelo o degradación elegante.
 * **Evaluación de proveedores de IA:** documentar APIs/proveedores, revisar latencia, SLA, cumplimiento legal, privacidad y portabilidad (evitar acoplar toda la lógica a un único SDK propietario).
-* **AI Governance y AI Risk Management:** definir responsables, inventario de usos de IA y revisión periódica de riesgos según el nivel del proyecto.
+* **AI Governance, Transparencia Pública y AI Risk Management:** definir responsables, inventario de usos de IA, revisión periódica de riesgos y, cuando el producto exponga funciones con IA a usuarios finales, publicar una **Política de Transparencia y Uso de IA (`/politica-ia`)** explicando qué funciones usan IA, qué datos se envían (y cuáles NO), política de no-entrenamiento, limitaciones/errores posibles, supervisión humana y canal para reportar respuestas incorrectas (ver `swe-legal-compliance/references/public-trust-and-legal-pages.md`).
 
 ## 4. Desarrollo asistido por IA (Agentes / Copilots)
 * Todo código generado por IA debe pasar las mismas reglas de **arquitectura, linting, pruebas automatizadas, SAST/secret scanning y Code Review** que el código humano.
