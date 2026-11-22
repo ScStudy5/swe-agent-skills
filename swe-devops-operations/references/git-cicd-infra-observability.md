@@ -67,9 +67,10 @@ main
 * **Kubernetes** únicamente cuando la escala o complejidad operativa lo justifique.
 * Configuración por **variables de entorno** y gestión segura de secretos.
 * Separación estricta de infraestructura por ambientes.
-* **Reverse Proxy**, **balanceo de carga** y **Auto Scaling** cuando corresponda.
-* **HTTPS**, **DNS** correctamente configurado, **Firewall** y gestión mínima de puertos.
-* **Gestión de recursos** (límites de CPU/RAM) y **gestión de certificados**.
+* **Reverse Proxy**, **balanceo de carga** y **Auto Scaling** con techos explícitos cuando corresponda.
+* **HTTPS con redirección HTTP -> HTTPS**, **DNS** correctamente configurado, **Firewall**, **permisos mínimos del servidor** y gestión mínima de puertos.
+* **Protección perimetral y anti-abuso:** **CDN / WAF** (p. ej. **Cloudflare**), protección contra **DDoS**, **HTTP Flood**, **bots** y **scraping**, **rate limiting** por IP/usuario/endpoint y límites de tamaño de solicitudes/respuestas.
+* **Gestión de recursos** (límites de CPU/RAM, límites de ejecución serverless y cuotas de ancho de banda) y **gestión de certificados**.
 * **Health Checks**, **Readiness** y **Liveness Probes**.
 * Estrategias de despliegue **Blue-Green** o **Canary** cuando aporten valor.
 * Automatización de tareas operativas repetitivas.
@@ -79,9 +80,11 @@ main
 ## 4. Monitoreo, observabilidad y mantenimiento
 
 ### Observabilidad
-* **Logging** centralizado, **Metrics**, **Distributed Tracing** y **Alerting**.
+* **Logging** centralizado (errores y operaciones relevantes, sin secretos ni PII), **Metrics**, **Distributed Tracing** y **Alerting**.
 * **APM** (*Application Performance Monitoring*) y monitoreo de errores (**Sentry**).
-* Monitoreo de disponibilidad, bases de datos, infraestructura y consumo de recursos.
+* Monitoreo de disponibilidad (**Uptime Kuma** u otro monitor de uptime), errores HTTP (`4xx`/`5xx`), CPU/memoria, bases de datos, almacenamiento, ancho de banda, llamadas a APIs y costos.
+* **Alertas críticas mínimas:** caída del servicio, pico de errores `5xx`, consumo/facturación excesiva, **actividad sospechosa**, **fallos reiterados de autenticación** y **fallos de backups**.
+* **Operación cara al usuario:** página de estado del servicio (*Status Page*) y aviso de mantenimiento programado cuando corresponda.
 * **Correlation IDs** y **dashboards operativos** (**Prometheus**, **Grafana**).
 
 ### Mantenimiento continuo
@@ -106,7 +109,7 @@ main
 ### Herramientas recomendadas
 * **CI/CD:** GitHub Actions, Azure DevOps.
 * **Contenedores / IaC:** Docker, Trivy, Terraform, OpenTofu.
-* **Monitoreo / Errores:** Prometheus, Grafana, Sentry.
+* **Monitoreo / Errores / Tráfico:** Prometheus, Grafana, Sentry, **Uptime Kuma**, **Cloudflare** (CDN/DNS/WAF/protección de tráfico).
 
 ---
 
@@ -124,10 +127,12 @@ main
 
 ### FinOps, límites duros en nube y escalado progresivo
 
-> **Advertencia crítica sobre Azure, AWS y GCP:** en la mayoría de los proveedores cloud grandes, las **alertas de presupuesto solo envían correos/notificaciones y NO apagan los recursos automáticamente**. Si se agotan los créditos gratuitos o hay un bucle de tráfico, la factura sigue subiendo.
+> **Advertencia crítica sobre plataformas cloud y serverless (Netlify, Vercel, Azure, AWS, GCP):** en la mayoría de los proveedores, las **alertas de presupuesto solo envían correos/notificaciones y NO detienen automáticamente el servicio**. Un ataque **DDoS / HTTP Flood**, bots descargando archivos, *scraping*, un endpoint serverless sin límites, un bucle de peticiones o una caché mal configurada pueden disparar facturas inesperadas rápidamente.
 
-* **Topes reales y protección desde el día 1:**
-  * Configurar **topes duros (*hard spending caps*)** en plataformas/APIs que lo soporten (ej. límites mensuales de gasto en APIs de IA o servicios con *spend limit*).
+* **Topes reales, anti-abuso y *kill switch* desde el día 1:**
+  * Configurar **presupuesto máximo operativo** y **topes duros (*hard spending caps*)** en plataformas/APIs que lo soporten (ej. límites mensuales de gasto en APIs de IA o servicios con *spend limit*).
+  * Revisar antes de desplegar: cuotas del plan, **límites de ejecución de funciones serverless**, **límites de ancho de banda (*egress*)**, **límites de tamaño de solicitudes/respuestas**, protección contra bots/DDoS, rate limiting (por IP, usuario y endpoint) en endpoints costosos y caché de contenido estático.
+  * Documentar y probar un **procedimiento de desactivación temporal de servicios (*kill switch* / modo mantenimiento)** para frenar un ataque o una fuga de costos en minutos.
   * En Azure/AWS/GCP: configurar alertas escalonadas (50 %, 80 %, 100 %), fijar **límites máximos estrictos de auto-scaling** (ej. `maxReplicas = 1 o 2` en MVP), poner **retención corta de logs** y revisar qué recursos cobran **por hora aunque no haya tráfico** (BDs administradas, NAT Gateways, IPs fijas, App Service Plans).
   * En **Nivel 1 (MVP)** y proyectos pequeños, preferir plataformas con precio fijo/tope predecible antes de aprovisionar servicios empresariales sin techo.
 * **Control de recursos y Unit Economics:** vigilar cómputo, almacenamiento, transferencia de datos (*egress*), apagar entornos dev/staging ociosos y medir costo por usuario activo/transacción (**FinOps Framework** + **Green Software / SCI**).

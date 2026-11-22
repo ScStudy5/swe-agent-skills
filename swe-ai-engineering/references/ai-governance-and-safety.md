@@ -15,11 +15,16 @@
 * **Human-in-the-loop:** exigir confirmación humana para acciones irreversibles, financieras, de seguridad o de alto impacto.
 * **Trazabilidad de decisiones automatizadas:** registrar qué modelo, versión de prompt y entrada originaron una decisión relevante (enmascarando PII en logs).
 
-## 3. Costos, resiliencia y gobernanza
-* **Control de costos por inferencia:** monitorear gasto por función/usuario/tenant y alertar picos anómalos.
-* **Límites de tokens y solicitudes:** establecer `max_tokens`, límites de contexto de entrada y rate limiting por usuario.
-* **Resiliencia:** timeouts adecuados, retries con backoff en errores transitorios y fallback de modelo o degradación elegante.
-* **Evaluación de proveedores de IA:** revisar latencia, SLA, cumplimiento legal, privacidad y portabilidad (evitar acoplar toda la lógica a un único SDK propietario).
+## 3. Costos, resiliencia, control de bucles y gobernanza
+* **Control de costos y límites estrictos:** establecer **presupuesto por usuario / plan de suscripción** y **presupuesto global**, configurar **límites duros de gasto (*hard spending limits*)** en el proveedor (recordando que las alertas de gasto no rechazan solicitudes nuevas por sí solas) y registrar tokens, llamadas, costos y errores (sin PII) con alertas ante picos anómalos.
+* **Límites de tokens y llamadas:** establecer límites estrictos de tokens de entrada y salida (`max_tokens`), cuotas por plan y **máximo de llamadas por usuario/tenant** (rate limiting).
+* **Protección contra bucles en agentes y *tool calling*:**
+  * Fijar un **máximo de iteraciones por tarea** (`max_iterations` / `max_steps`).
+  * Implementar **detección y corte de llamadas recursivas** (ej. agente -> herramienta -> función -> agente).
+  * Evitar que dos procesos ejecuten simultáneamente la misma tarea (**bloqueo / deduplicación / idempotencia** por tarea).
+  * No permitir jamás que la IA acceda libremente a **operaciones administrativas** sin validación estricta en backend y confirmación humana.
+* **Resiliencia controlada:** configurar **timeouts** estrictos, evitar **reintentos infinitos**, usar **backoff exponencial con *jitter*** solo en errores transitorios y prever fallback de modelo o degradación elegante.
+* **Evaluación de proveedores de IA:** documentar APIs/proveedores, revisar latencia, SLA, cumplimiento legal, privacidad y portabilidad (evitar acoplar toda la lógica a un único SDK propietario).
 * **AI Governance y AI Risk Management:** definir responsables, inventario de usos de IA y revisión periódica de riesgos según el nivel del proyecto.
 
 ## 4. Desarrollo asistido por IA (Agentes / Copilots)

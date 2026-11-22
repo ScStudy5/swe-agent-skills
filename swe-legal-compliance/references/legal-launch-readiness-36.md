@@ -8,7 +8,7 @@
 ## Bloque 1 — Privacidad y Datos Personales (`L-01` a `L-06`)
 - [ ] **L-01 (`N1`):** Aviso de Privacidad Integral redactado conforme a LFPDPPP vigente (y GDPR/CCPA si aplica), sin placeholders y publicado en URL permanente.
 - [ ] **L-02 (`N1`):** Aviso de Privacidad Simplificado visible en cada formulario de registro/captura con enlace directo al Integral.
-- [ ] **L-03 (`N1`):** Separación clara entre finalidades primarias (necesarias) y secundarias (marketing/analítica) con mecanismo de negativa.
+- [ ] **L-03 (`N1`):** Separación clara entre finalidades primarias (necesarias) y secundarias (marketing/analítica/listas de espera), con consentimiento registrado, identificación del remitente, baja (*unsubscribe*) operativa y cumplimiento de reglas de canal (email/SMS/WhatsApp).
 - [ ] **L-04 (`N2`):** Canal y procedimiento operativo de derechos ARCO definido (correo/formulario dedicado, verificación de identidad, folios y plazos legales).
 - [ ] **L-05 (`N1`):** Política de Cookies publicada y banner de consentimiento que bloquea rastreadores no esenciales antes de aceptar.
 - [ ] **L-06 (`N2`):** Inventario de terceros receptores/encargados de datos (hosting, auth, pagos, IA, analítica) documentado y consistente con el Aviso de Privacidad.

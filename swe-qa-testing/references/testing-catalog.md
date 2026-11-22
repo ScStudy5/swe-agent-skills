@@ -48,7 +48,18 @@ Todo proyecto debe tener una estrategia de pruebas. No basta con probar manualme
 
 ---
 
-## 3. Estándares y herramientas recomendadas
+## 3. Higiene previa a producción (*Release Hygiene*)
+Antes de publicar, verificar explícitamente que:
+* No existan errores críticos en consola ni enlaces/recursos rotos.
+* No queden **endpoints de prueba/depuración** publicados ni **usuarios o contraseñas predeterminados**.
+* No existan **datos ficticios / semillas de desarrollo** en producción.
+* Los mensajes de error no revelen trazas ni información interna del servidor.
+* Las validaciones críticas se ejecuten también en backend y los procesos críticos cuenten con pruebas automatizadas.
+* Se haya probado el comportamiento **sin conexión (offline)** cuando aplique (PWA/móvil) y la degradación controlada cuando **falla un servicio externo**.
+
+---
+
+## 4. Estándares y herramientas recomendadas
 * **Estándar:** ISO/IEC/IEEE 29119 (Pruebas de software).
 * **Unitarias / Integración:** xUnit, NUnit, Jest, Vitest.
 * **E2E:** Playwright, Cypress.

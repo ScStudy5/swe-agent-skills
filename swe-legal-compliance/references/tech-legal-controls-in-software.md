@@ -56,3 +56,13 @@ Implementar un módulo o sección accesible desde la configuración de cuenta (y
 ## 6. Versionado de textos legales y re-aceptación
 * Versionar cada documento legal en Git (junto con su hash `SHA-256`) y mantener accesible el historial de versiones publicadas.
 * Cuando exista un cambio **sustancial** (nuevas finalidades de datos, nuevas transferencias, cambio de tarifas/condiciones), notificar con antelación razonable y solicitar re-aceptación registrada en el siguiente inicio de sesión o antes de aplicar las nuevas condiciones.
+
+---
+
+## 7. Comunicaciones comerciales, marketing y listas de espera (*Waitlists*)
+* **Listas de espera y formularios de captura:** no basta con pedir un correo electrónico y asumir permiso indefinido para enviar publicidad. Explica qué tipo de avisos recibirá el usuario (p. ej. solo aviso de lanzamiento vs. boletines promocionales) y usa una casilla de consentimiento separada y desmarcada cuando incluya fines comerciales secundarios.
+* **Requisitos mínimos antes de enviar mensajes (correo, SMS, WhatsApp):**
+  * Obtener la autorización/consentimiento aplicable y registrar **cuándo y cómo** se obtuvo.
+  * Identificar claramente al remitente y respetar las políticas de cada canal (**WhatsApp Business, SMS, correo electrónico**) y la legislación del país del destinatario (p. ej. LFPDPPP/LFPC en México; reglas específicas como TCPA/CAN-SPAM en EE. UU. o GDPR/ePrivacy en UE si hay destinatarios en esas jurisdicciones).
+  * Incluir un mecanismo funcional y visible para **cancelar suscripciones (*unsubscribe*)** y respetar las bajas de inmediato.
+  * No reutilizar datos capturados para finalidades incompatibles ni **comprar o importar listas de contactos** sin verificar su procedencia legítima y base legal.

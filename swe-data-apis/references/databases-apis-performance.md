@@ -14,8 +14,9 @@
 | **ACID** | Garantizar Atomicidad, Consistencia, Aislamiento y Durabilidad en transacciones. |
 | **Connection Pooling** | Reutilizar conexiones eficientemente bajo concurrencia. |
 | **Migrations** | Versionar y automatizar cambios en la estructura de datos de forma reversible/controlada. |
-| **Backup** | Realizar respaldos periódicos automatizados. |
-| **Restore Testing** | Comprobar periódicamente que los respaldos realmente se pueden recuperar. |
+| **Backup** | Realizar respaldos periódicos automatizados (BD, archivos/documentos y configuraciones críticas), verificando que realmente se generen y manteniendo copias fuera del proveedor principal (*off-site*) cuando el riesgo lo amerite. |
+| **Restore Testing** | Comprobar periódicamente que los respaldos realmente se pueden recuperar (no basta con tener backups; hay que demostrar su restauración). |
+| **Row Level Security (RLS) y Permisos** | En bases de datos expuestas vía API/BaaS (p. ej. PostgreSQL/Supabase) o multi-tenant: activar **RLS** en todas las tablas expuestas, crear políticas `SELECT`/`INSERT`/`UPDATE`/`DELETE`, probar acceso cruzado entre usuarios, revisar permisos de vistas/funciones y políticas por bucket de Storage, y nunca exponer llaves privilegiadas (`service_role`) en el cliente. |
 | **Data Encryption** | Proteger datos sensibles en tránsito y en reposo. |
 | **Data Masking** | Ocultar o anonimizar información sensible en entornos no productivos. |
 | **Data Retention** | Definir cuánto tiempo se conserva cada tipo de información y cuándo se purga. |
@@ -80,7 +81,7 @@ Reglas para proyectos con backend, frontend, apps móviles o integraciones exter
 
 ## 4. Resiliencia, concurrencia y gobierno práctico de datos
 
-* **Concurrencia e integridad:** prevenir **condiciones de carrera** (*race conditions*) mediante bloqueos optimistas/pesimistas, restricciones `UNIQUE` e **idempotencia** en operaciones críticas y webhooks.
+* **Concurrencia, pagos e integridad:** prevenir **condiciones de carrera** (*race conditions*) mediante bloqueos optimistas/pesimistas, restricciones `UNIQUE` e **idempotencia** en operaciones críticas y webhooks. En pagos en línea: delegar a pasarela especializada (PCI-DSS, sin guardar datos completos de tarjetas), **verificar firmas de webhooks**, confirmar el estado del pago directamente en el backend, evitar cargos duplicados y definir un procedimiento operativo para **resolver pagos fallidos** (*dunning*/reintentos).
 * **Colas y fallos asíncronos:** usar **Dead Letter Queues (DLQ)** para mensajes fallidos tras agotar reintentos y evitar estados inconsistentes entre BD y servicios externos (patrón *Outbox* o reconciliación cuando corresponda).
 * **Migraciones compatibles hacia atrás:** separar cambios de esquema destructivos en fases (*expand and contract*) para desplegar sin tiempo de inactividad.
 * **Continuidad (RTO y RPO):** definir cuánto tiempo máximo puede estar caído el sistema (**RTO**) y cuántos datos máximos se tolera perder (**RPO**), alineando con esto la frecuencia de backups y *restore testing*.

@@ -3,10 +3,11 @@ name: swe-browser-audit
 description: >-
   Auditoría dinámica profesional en navegador real con Playwright sobre localhost o
   staging autorizado: inspecciona código cliente, consola, peticiones HTTP, Security
-  Headers, cookies, storage, accesibilidad (axe-core), responsive y ejecuta pruebas
-  controladas de validación de campos, XSS, sondas seguras de SQLi/NoSQLi, CSRF e
-  IDOR. Usar para auditar seguridad y calidad funcional en vivo (para revisión
-  estática de código, arquitectura o privacidad en repositorio usar swe-security-privacy).
+  Headers, cookies, storage, accesibilidad (axe-core), responsive (desktop/tablet/móvil),
+  captura screenshots para crítica visual UI/UX y ejecuta pruebas controladas de
+  validación de campos, XSS, sondas seguras de SQLi/NoSQLi, CSRF e IDOR. Usar para
+  auditar seguridad, diseño visual y calidad funcional en vivo (para revisión estática
+  de código, arquitectura o privacidad en repositorio usar swe-security-privacy).
 ---
 
 # Auditoría Dinámica y Seguridad en Navegador (Playwright)
@@ -33,6 +34,10 @@ Ejecuta el script base [playwright_security_audit.mjs](./scripts/playwright_secu
 node <ruta-de-la-skill>/scripts/playwright_security_audit.mjs http://localhost:3000 \
   --routes /,/login --out audit-report.json
 
+# Auditoría + capturas visuales (desktop/tablet/móvil, above-the-fold y fullPage; usa --color-scheme both si hay modo oscuro)
+node <ruta-de-la-skill>/scripts/playwright_security_audit.mjs http://localhost:3000 \
+  --routes /,/login --screenshots-dir .audit-screenshots --color-scheme both --out audit-report.json
+
 # Con sondas activas seguras en entorno de pruebas (agrega --allow-remote solo para staging autorizado)
 node <ruta-de-la-skill>/scripts/playwright_security_audit.mjs http://localhost:3000 \
   --routes /,/login --probe-forms --max-forms 10 --out audit-report.json
@@ -46,7 +51,7 @@ Comprobaciones cubiertas:
 3. **Security Headers HTTP:** verifica presencia de `Content-Security-Policy`, `Strict-Transport-Security` (en HTTPS), `X-Content-Type-Options`, `X-Frame-Options` / `frame-ancestors`, `Referrer-Policy` y `Permissions-Policy` sobre la respuesta final tras redirecciones (y revisa manualmente la fortaleza de directivas CSP/HSTS).
 4. **Cookies y almacenamiento cliente:** revisa que las cookies de sesión tengan `HttpOnly`, `Secure` (en HTTPS) y `SameSite`; inspecciona claves de `localStorage`/`sessionStorage` (sin imprimir valores) para detectar tokens sensibles o secretos expuestos a XSS.
 5. **Código fuente expuesto en cliente:** detecta *sourcemaps* (`.map`) servidos o referenciados vía `sourceMappingURL` públicamente con HTTP `200`, claves privadas o endpoints administrativos filtrados en bundles JS.
-6. **Responsive y Accesibilidad real:** valida desktop (`1440x900`) y mobile (`390x844`) buscando desbordamiento horizontal (`scrollWidth > innerWidth`) y ejecuta **axe-core** sobre el DOM renderizado si `@axe-core/playwright` está instalado.
+6. **Responsive, Capturas Visuales y Accesibilidad real:** valida `desktop` (`1440×900`), `tablet` (`768×1024`) y `mobile` (`390×844`) buscando desbordamiento horizontal (`scrollWidth > innerWidth`), ejecuta **axe-core** sobre el DOM renderizado si `@axe-core/playwright` está instalado y, cuando se pasa `--screenshots-dir`, guarda PNGs (*above the fold* y `fullPage`, en `light`/`dark`/`both`) para inspeccionar visualmente jerarquía, tipografía, espaciado, alineación y diseño anti-genérico siguiendo el checklist de crítica visual de `swe-ux-accessibility` (evita subir `.audit-screenshots/` a Git).
 
 ### 3. Pruebas activas de robustez y seguridad (Pentest funcional controlado)
 Ejecuta `--probe-forms` (en entorno de pruebas) o realiza pruebas dirigidas por flujo. El script omite por defecto formularios de borrado/pago/logout (usa `--include-risky-forms` solo con datos sintéticos) y limita `--max-forms 10` por ruta. **IDOR, Auth Bypass, CSRF, Open Redirect y payloads CRLF/URL no están automatizados**: ejecútalos manualmente o con el MCP/subagente de navegador.

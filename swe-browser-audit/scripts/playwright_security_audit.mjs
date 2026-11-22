@@ -70,14 +70,22 @@ const SAFE_FORM_PROBES = [
 ];
 
 const USAGE =
-  "Usage: node playwright_security_audit.mjs <url> [--routes /,/login] [--probe-forms] [--include-risky-forms] [--max-forms 10] [--allow-remote] [--out report.json]\n" +
-  "  --routes <list>        rutas separadas por coma (default: /)\n" +
-  "  --probe-forms          ejecuta sondas seguras no destructivas sobre formularios\n" +
-  "  --include-risky-forms  tambien prueba formularios de borrado/pago/logout (solo con datos de prueba)\n" +
-  "  --max-forms <n>        maximo de formularios a sondear por ruta (default: 10)\n" +
-  "  --allow-remote         autoriza auditar un host staging no local (solo entornos autorizados)\n" +
-  "  --out <archivo.json>   guarda el reporte JSON detallado en disco\n" +
+  "Usage: node playwright_security_audit.mjs <url> [--routes /,/login] [--probe-forms] [--include-risky-forms] [--max-forms 10] [--screenshots-dir dir] [--color-scheme light|dark|both] [--allow-remote] [--out report.json]\n" +
+  "  --routes <list>          rutas separadas por coma (default: /)\n" +
+  "  --probe-forms            ejecuta sondas seguras no destructivas sobre formularios\n" +
+  "  --include-risky-forms    tambien prueba formularios de borrado/pago/logout (solo con datos de prueba)\n" +
+  "  --max-forms <n>          maximo de formularios a sondear por ruta (default: 10)\n" +
+  "  --screenshots-dir <dir>  captura PNGs (desktop 1440x900, tablet 768x1024, mobile 390x844; fold + fullPage) para revision visual\n" +
+  "  --color-scheme <mode>    esquema de color al capturar screenshots: light | dark | both (default: light)\n" +
+  "  --allow-remote           autoriza auditar un host staging no local (solo entornos autorizados)\n" +
+  "  --out <archivo.json>     guarda el reporte JSON detallado en disco\n" +
   "  Nota: IDOR/CSRF requieren dos usuarios y se verifican manualmente (ver SKILL.md).";
+
+const SCREENSHOT_VIEWPORTS = [
+  { name: "desktop", width: 1440, height: 900 },
+  { name: "tablet", width: 768, height: 1024 },
+  { name: "mobile", width: 390, height: 844 },
+];
 
 function parseArgs(argv) {
   const args = argv.slice(2);
@@ -97,6 +105,8 @@ function parseArgs(argv) {
   let includeRisky = false;
   let allowRemote = false;
   let maxForms = 10;
+  let screenshotsDir = null;
+  let colorScheme = "light";
   let outFile = null;
 
   for (let i = 1; i < args.length; i += 1) {
@@ -125,6 +135,19 @@ function parseArgs(argv) {
         process.exit(1);
       }
       maxForms = parsedMax;
+    } else if (a === "--screenshots-dir") {
+      if (!args[i + 1] || args[i + 1].startsWith("--")) {
+        console.error("Error: --screenshots-dir requiere un directorio destino (ej. --screenshots-dir .audit-screenshots).");
+        process.exit(1);
+      }
+      screenshotsDir = args[++i];
+    } else if (a === "--color-scheme") {
+      const rawScheme = (args[++i] || "").toLowerCase();
+      if (!["light", "dark", "both"].includes(rawScheme)) {
+        console.error("Error: --color-scheme debe ser light, dark o both.");
+        process.exit(1);
+      }
+      colorScheme = rawScheme;
     } else if (a === "--out") {
       if (!args[i + 1] || args[i + 1].startsWith("--")) {
         console.error("Error: --out requiere una ruta de archivo de salida (ej. --out audit.json).");
@@ -136,7 +159,18 @@ function parseArgs(argv) {
       process.exit(1);
     }
   }
-  return { url, routes, probeForms, includeRisky, allowRemote, maxForms, outFile };
+  return { url, routes, probeForms, includeRisky, allowRemote, maxForms, screenshotsDir, colorScheme, outFile };
+}
+
+function sanitizeRouteSlug(routePath) {
+  const pathOnly = String(routePath || "/").split(/[?#]/)[0];
+  const cleaned = pathOnly
+    .replace(/^\/+|\/+$/g, "")
+    .replace(/[^a-zA-Z0-9_-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .toLowerCase();
+  return cleaned ? cleaned.slice(0, 60) : "root";
 }
 
 function isLocalHostname(hostname) {
@@ -194,7 +228,12 @@ function extractSourceMapUrl(jsBody, scriptUrl) {
   }
 }
 
-async function auditRoute(context, baseUrl, routePath, { probeForms, includeRisky, maxForms }) {
+async function auditRoute(
+  context,
+  baseUrl,
+  routePath,
+  { probeForms, includeRisky, maxForms, screenshotsDir, colorScheme }
+) {
   const targetUrl = new URL(routePath, baseUrl).toString();
   const targetOrigin = new URL(targetUrl).origin;
   const page = await context.newPage();
@@ -308,10 +347,42 @@ async function auditRoute(context, baseUrl, routePath, { probeForms, includeRisk
     () => document.documentElement.scrollWidth > window.innerWidth
   );
 
+  await page.setViewportSize({ width: 768, height: 1024 });
+  const tabletOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth > window.innerWidth
+  );
+
   await page.setViewportSize({ width: 390, height: 844 });
   const mobileOverflow = await page.evaluate(
     () => document.documentElement.scrollWidth > window.innerWidth
   );
+
+  const screenshots = [];
+  if (screenshotsDir) {
+    const resolvedDir = path.resolve(screenshotsDir);
+    fs.mkdirSync(resolvedDir, { recursive: true });
+    const slug = sanitizeRouteSlug(routePath);
+    const schemes = colorScheme === "both" ? ["light", "dark"] : [colorScheme];
+
+    for (const scheme of schemes) {
+      await page.emulateMedia({ colorScheme: scheme });
+      for (const vp of SCREENSHOT_VIEWPORTS) {
+        await page.setViewportSize({ width: vp.width, height: vp.height });
+        await page.waitForTimeout(200);
+        const prefix = `${slug}-${vp.name}-${scheme}`;
+        const foldPath = path.join(resolvedDir, `${prefix}-fold.png`);
+        const fullPath = path.join(resolvedDir, `${prefix}-full.png`);
+        await page.screenshot({ path: foldPath, fullPage: false });
+        await page.screenshot({ path: fullPath, fullPage: true });
+        screenshots.push(
+          { viewport: vp.name, colorScheme: scheme, kind: "above-the-fold", path: foldPath },
+          { viewport: vp.name, colorScheme: scheme, kind: "full-page", path: fullPath }
+        );
+      }
+    }
+    await page.emulateMedia({ colorScheme: null });
+  }
+
   await page.setViewportSize({ width: 1440, height: 900 });
 
   const missingHeaders = RECOMMENDED_HEADERS.filter((h) => !(h in documentHeaders));
@@ -535,7 +606,8 @@ async function auditRoute(context, baseUrl, routePath, { probeForms, includeRisk
     missingSecurityHeaders: missingHeaders,
     cookies,
     storageInspection,
-    responsiveOverflow: { desktop: desktopOverflow, mobile: mobileOverflow },
+    responsiveOverflow: { desktop: desktopOverflow, tablet: tabletOverflow, mobile: mobileOverflow },
+    screenshots,
     formsCount: formsInventory.length,
     formsInventory,
     axe: axeSummary,
@@ -591,6 +663,8 @@ async function main() {
           probeForms: opts.probeForms,
           includeRisky: opts.includeRisky,
           maxForms: opts.maxForms,
+          screenshotsDir: opts.screenshotsDir,
+          colorScheme: opts.colorScheme,
         })
       );
     }
@@ -620,7 +694,12 @@ async function main() {
         r.missingSecurityHeaders.join(", ") || "Ninguno basico faltante (revisar directivas CSP/HSTS)"
       }`
     );
-    console.log(`- Overflow horizontal: desktop=${r.responsiveOverflow.desktop}, mobile=${r.responsiveOverflow.mobile}`);
+    console.log(
+      `- Overflow horizontal: desktop=${r.responsiveOverflow.desktop}, tablet=${r.responsiveOverflow.tablet}, mobile=${r.responsiveOverflow.mobile}`
+    );
+    if (r.screenshots.length) {
+      console.log(`- Capturas visuales guardadas (${r.screenshots.length}): ${path.resolve(opts.screenshotsDir)}`);
+    }
     console.log(`- Formularios detectados: ${r.formsCount} | Hallazgos en sondas activas: ${r.formProbeFindings.length}`);
     if (r.skippedRiskyForms.length) {
       console.log(

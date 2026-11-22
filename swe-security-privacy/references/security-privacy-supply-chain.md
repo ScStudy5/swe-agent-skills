@@ -13,16 +13,18 @@ La seguridad no debe agregarse al final. Debe formar parte de todo el ciclo de d
 | **Security by Design** | Diseñar considerando la seguridad desde el inicio. |
 | **Least Privilege** | Dar únicamente los permisos estrictamente necesarios. |
 | **Zero Trust** | No confiar automáticamente en usuarios, dispositivos o servicios. |
-| **MFA** | Autenticación multifactor cuando corresponda. |
+| **MFA** | Autenticación multifactor (especialmente obligatoria para cuentas administrativas y operaciones sensibles). |
 | **RBAC** | Control de acceso basado en roles. |
 | **ABAC** | Control de acceso basado en atributos cuando sea necesario. |
+| **IDOR / BOLA** | Verificar autorización por recurso y propietario en cada endpoint (nunca confiar en el ID recibido; probar acceso cruzado entre Usuario A y Usuario B). |
 | **OAuth 2.0 / OpenID Connect** | Gestionar autorización y autenticación mediante protocolos apropiados. |
-| **Gestión de sesiones** | Proteger cookies (`HttpOnly`, `Secure`, `SameSite`), tokens, sesiones y expiraciones. |
-| **Cifrado en tránsito** | Usar TLS/HTTPS en todas las comunicaciones. |
+| **Autenticación, cuentas y sesiones** | Verificar correo cuando corresponda, recuperación segura de contraseñas (tokens de un solo uso con TTL corto), **anti-enumeración de cuentas** (no revelar si un correo está registrado en mensajes de error), cookies (`HttpOnly`, `Secure`, `SameSite`), expiración de sesiones, **invalidación en servidor al cerrar sesión**, **revocación inmediata de sesiones comprometidas** y evitar tokens permanentes. |
+| **Row Level Security (RLS) y BaaS** | En bases de datos expuestas por API (p. ej. PostgreSQL/Supabase): activar **RLS** en todas las tablas expuestas, definir políticas explícitas `SELECT`/`INSERT`/`UPDATE`/`DELETE`, probar acceso cruzado entre usuarios, revisar permisos de vistas/funciones/Storage y **nunca exponer `service_role` key en el frontend** (la clave pública `anon`/`publishable` no es un secreto; la seguridad depende de RLS y permisos). Regla: *tener autenticación no significa que la BD esté protegida*. |
+| **Cifrado en tránsito** | Usar TLS/HTTPS en todas las comunicaciones con redirección forzada **HTTP -> HTTPS**. |
 | **Cifrado en reposo** | Proteger información almacenada sensible y claves criptográficas. |
-| **Gestión de secretos** | Nunca subir contraseñas, API keys o certificados al repositorio; usar gestores de secretos y **revocar/rotar claves** de inmediato ante cualquier sospecha. |
+| **Gestión de secretos** | Nunca subir contraseñas, API keys o certificados al repositorio ni exponerlos en el frontend; usar variables de entorno separadas por ambiente, gestores de secretos y **revocar/rotar claves** de inmediato ante cualquier sospecha. |
 | **Precios y reglas críticas en servidor** | Recalcular precios, descuentos, totales, límites y permisos siempre en servidor desde fuentes confiables (nunca confiar en valores enviados por el cliente). |
-| **Sin modo depuración ni archivos expuestos** | Desactivar `DEBUG` en producción, no exponer `.git/`, `.env`, dumps `.sql`, `.map` privados ni buckets públicos, y limitar tamaño/tipo de archivos subidos. |
+| **Sin modo depuración ni archivos expuestos** | Desactivar `DEBUG` en producción, eliminar endpoints de prueba y credenciales predeterminadas, no exponer `.git/`, `.env`, dumps `.sql`, `.map` privados ni buckets públicos, y limitar tamaño/tipo de archivos subidos. |
 | **Enlaces y tokens que caducan** | Usar URLs firmadas y tokens de recuperación/descarga con expiración corta (TTL) y de un solo uso cuando corresponda. |
 | **Gestión de vulnerabilidades** | Detectar, priorizar y corregir vulnerabilidades con SLA definido. |
 | **SAST** | Analizar código fuente en busca de problemas de seguridad. |

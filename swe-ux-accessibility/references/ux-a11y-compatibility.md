@@ -36,15 +36,16 @@
 ## 3. Accesibilidad (A11y)
 
 * Cumplir **WCAG 2.2 nivel AA** como objetivo recomendado (el W3C recomienda trabajar con la versión vigente de WCAG).
-* **Navegación completa por teclado** (`Tab`, `Shift+Tab`, `Enter`, `Space`, `Escape`, flechas donde corresponda) sin trampas de teclado.
+* **Navegación completa por teclado** (`Tab`, `Shift+Tab`, `Enter`, `Space`, `Escape`, flechas donde corresponda) con **orden lógico de tabulación** y sin trampas de teclado.
+* **Menús desplegables y modales accesibles:** menús operables 100 % con teclado; modales con **gestión correcta de foco** (atrapar foco dentro mientras permanecen abiertos, cierre con `Escape` y restauración del foco al elemento disparador).
 * **Compatibilidad con lectores de pantalla** (roles, estados y propiedades correctas).
 * **Contraste adecuado** entre texto/controles y fondo.
-* **Etiquetas accesibles** asociadas a cada campo y botón.
+* **Etiquetas accesibles** asociadas a cada campo (`<label>`) y botón.
 * **Textos alternativos (`alt`)** significativos para imágenes informativas (y `alt=""` en decorativas).
 * **No depender exclusivamente del color** para comunicar errores, estados o gráficos (acompañar con texto o icono).
 * **Subtítulos / transcripciones** para contenido audiovisual.
 * **Foco visible** en todo elemento interactivo.
-* **Estructura semántica HTML** (`header`, `nav`, `main`, `button`, encabezados ordenados `h1`–`h6`).
+* **Estructura semántica HTML e idioma:** usar landmarks (`header`, `nav`, `main`, `button`), jerarquía ordenada de encabezados (`h1`–`h6`) y especificar explícitamente el **idioma del documento** (`<html lang="es">` o el idioma correspondiente).
 * Respeto por **`prefers-reduced-motion`** para usuarios sensibles a animaciones.
 * **Tamaños de texto ajustables** (zoom hasta 200 % sin pérdida de contenido o funcionalidad).
 
@@ -67,3 +68,15 @@
 * Compatibilidad con lectores de pantalla.
 * Control de **versiones soportadas de frameworks** y **compatibilidad entre dependencias**.
 * **Evitar tecnologías obsoletas** sin justificación documentada.
+
+---
+
+## 5. SEO, indexación y publicación web pública
+
+Aplicable a sitios públicos, landing pages, SaaS con páginas de marketing y e-commerce:
+
+* **Metadatos base:** configurar `<title>` y `<meta name="description">` únicos por página, `favicon` e iconos de plataforma, **Open Graph** (`og:title`, `og:description`, `og:image`, `og:url`) y **URLs canónicas** (`<link rel="canonical">`).
+* **Control de indexación:** publicar `robots.txt` y `sitemap.xml` cuando corresponda; definir explícitamente qué páginas deben indexarse y **bloquear la indexación (`noindex` + autenticación) de paneles administrativos, rutas internas y vistas con información sensible**.
+* **Privacidad en metadatos:** comprobar que títulos, descripciones, URLs y etiquetas Open Graph nunca revelen datos privados o internos.
+* **Páginas de error y enlaces:** configurar páginas **`404`** y **`500`** dedicadas, claras y sin filtrar trazas técnicas; verificar ausencia de **enlaces rotos** antes de publicar.
+* **Operación cara al usuario:** asegurar página de contacto funcional, correo/canal de soporte operativo, preguntas frecuentes (**FAQ**) cuando corresponda, información clara sobre limitaciones/precios del servicio y páginas de mantenimiento o estado del servicio cuando aplique.

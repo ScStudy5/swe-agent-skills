@@ -12,9 +12,21 @@ description: >-
 
 Usa esta skill como punto de entrada para establecer estándares profesionales de desarrollo en aplicaciones web, PWAs, APIs, SaaS, apps móviles o sistemas empresariales.
 
-## Principio rector
+## Principio rector y compuerta de lanzamiento
 
 **Aplicación proporcional:** no todas las prácticas son obligatorias en todos los proyectos. Algunas son requisitos de seguridad o cumplimiento legal, otras estándares internacionales y otras recomendaciones de ingeniería. Ajusta el rigor según **riesgo, tamaño, datos manejados y naturaleza del sistema**.
+
+### Reglas innegociables antes de publicar (cualquier nivel: MVP, gratuito o comercial)
+1. **Ningún secreto ni dato privado puede quedar expuesto** (código, frontend, repositorio, logs, BD/RLS o storage).
+2. **Ningún servicio de pago puede operar sin límites de consumo y controles de costos adecuados** (topes duros/límites de ejecución/cuotas; no confundir alertas con topes).
+3. **Ninguna aplicación puede publicarse sin revisar sus obligaciones de seguridad y cumplimiento legal** aplicables.
+
+### Ciclo estándar de lanzamiento en 5 etapas
+1. **Pre-Development Audit:** revisar arquitectura, perfil de producto, requisitos legales, datos, infraestructura, costos y riesgos antes de empezar.
+2. **Development Security:** aplicar controles de seguridad, permisos, pruebas, estándares de código y revisión de dependencias durante el desarrollo.
+3. **Pre-Production Audit:** ejecutar pruebas integrales y verificar el checklist maestro (`0/57`), configuraciones, RLS, accesibilidad, SEO, facturación, privacidad y restauración de backups.
+4. **Production Release:** completar la matriz de riesgos y autorización **Go/No-Go** por roles, desplegar con rollback listo y verificar salud y monitoreo.
+5. **Post-Production Audit:** vigilar errores, costos, tráfico/abuso, vulnerabilidades, disponibilidad y comentarios de usuarios.
 
 ## Flujo de trabajo
 
@@ -53,7 +65,7 @@ Consulta la matriz en [standards-and-tools.md](./references/standards-and-tools.
 1. Si hay Python 3 disponible, ejecuta primero el escaneo rápido de solo lectura usando el script [repo_audit_scan.py](./scripts/repo_audit_scan.py) desde la ruta resuelta de esta skill (no relativa al CWD del proyecto):
    `python3 <ruta-de-la-skill>/scripts/repo_audit_scan.py <ruta-del-repo>` (en Windows usa `python`; agrega `--format json` si necesitas procesar la salida estructurada).
    *(Detecta stack en raíz y monorepos estándar, documentación base, lockfiles, CI, archivos `.env` en disco o rastreados en Git —incluso anidados— y posibles secretos sin imprimir valores).*
-2. Usa como guía base el checklist de [audit-checklist.md](./examples/audit-checklist.md) e inspecciona estructura, dependencias, CI/CD, datos y código.
+2. Usa como guía base el checklist maestro de pre-lanzamiento (`0/57`) y la matriz de autorización **Go/No-Go** de [audit-checklist.md](./examples/audit-checklist.md) e inspecciona estructura, dependencias, CI/CD, datos, costos y código.
 3. Evalúa por bloques priorizando riesgos críticos (seguridad, secretos, pérdida de datos, fallos de producción, escalabilidad) antes que mejoras cosméticas.
 4. Si la auditoría es profunda en un dominio, aplica la skill `swe-*` correspondiente.
 5. Entrega un informe accionable agrupado en: **Crítico (bloqueante)**, **Importante (corto plazo)** y **Recomendado (mejora continua)**. *(Cuando consolides hallazgos de seguridad/navegador clasificados en 4 niveles: `Crítico` -> Crítico; `Alto`/`Medio` -> Importante; `Bajo` -> Recomendado).*
