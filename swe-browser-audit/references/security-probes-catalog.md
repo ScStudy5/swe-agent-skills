@@ -7,8 +7,8 @@
 ## 1. Auditoría pasiva: qué verificar en cada carga de página
 
 ### Consola y Red
-* **Fallo esperado = 0:** no deben existir `console.error`, `pageerror` ni recursos rotos (`404`/`500`).
-* **Fuga de errores internos:** buscar en respuestas HTTP/HTML/JSON cadenas como `SQLSTATE`, `SyntaxError`, `pg_`, `mysql_`, `Traceback (most recent call last)`, `System.Data.SqlClient`, rutas locales (`C:\Users\`, `/var/www/`).
+* **Fallo esperado = 0:** no deben existir `console.error`, `pageerror` ni recursos rotos (`404`/`500`), ni mensajes `console.log`/`debug` en producción que filtren tokens, PII o estado interno sensible.
+* **Fuga de errores internos y bundles:** buscar en respuestas HTTP/HTML/JSON cadenas como `SQLSTATE`, `SyntaxError`, `pg_`, `mysql_`, `Traceback (most recent call last)`, `System.Data.SqlClient`, rutas locales (`C:\Users\`, `/var/www/`), y confirmar que los bundles JS cliente no contengan `.map` públicos ni datos reservados de negocio (respuestas correctas, reglas secretas o claves).
 * **PII excesiva:** validar que endpoints de listado no devuelvan campos innecesarios (`passwordHash`, `tokens`, teléfonos/CURP/direcciones de otros usuarios).
 
 ### Security Headers esperados

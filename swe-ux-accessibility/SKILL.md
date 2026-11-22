@@ -38,7 +38,7 @@ Aplica esta skill en cualquier aplicación con interfaz de usuario (web, PWA, m�
    * **Error** (mensajes comprensibles y recuperación)
    * Más confirmaciones para acciones destructivas/irreversibles.
 4. **Accesibilidad desde el inicio (WCAG 2.2 AA):** estructura HTML semántica con atributo `lang`, contraste adecuado, foco visible, navegación completa por teclado (orden lógico de `Tab`, menús desplegables y foco controlado en modales), `WAI-ARIA` solo cuando el HTML semántico no baste, `prefers-reduced-motion` y compatibilidad con lectores de pantalla.
-5. **Compatibilidad, i18n/l10n y SEO/publicación web:** UTF-8, manejo normalizado de fechas y zonas horarias, externalización de textos (i18n), formatos locales/monetarios (l10n) y, en sitios públicos, metadatos (`title`, `description`, `favicon`, Open Graph, URLs canónicas), `robots.txt`/`sitemap.xml`, `noindex` en paneles administrativos y páginas `404`/`500` limpias.
+5. **Compatibilidad, i18n/l10n, resiliencia UI y SEO/publicación web:** UTF-8, manejo normalizado de fechas y zonas horarias, externalización de textos (i18n), formatos locales/monetarios (l10n), **`ErrorBoundary` global + vistas `400`/`403`/`404`/`500`/`503` + estado *offline*** y, en sitios públicos, metadatos (`title`, `description`, `favicon`, Open Graph, URLs canónicas), `robots.txt`/`sitemap.xml` y `noindex` en paneles administrativos.
 
 Consulta el detalle completo en [design-craft-and-ux-strategy.md](./references/design-craft-and-ux-strategy.md) y [ux-a11y-compatibility.md](./references/ux-a11y-compatibility.md).
 

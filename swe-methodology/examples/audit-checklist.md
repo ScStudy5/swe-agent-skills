@@ -10,7 +10,7 @@
 ---
 
 ## 1. Seguridad informática (`7` puntos — Bloqueante)
-- [ ] Secretos, contraseñas, tokens y API Keys privadas protegidos (cero exposición en frontend, repositorio o logs) y variables de entorno separadas entre desarrollo y producción.
+- [ ] Secretos, contraseñas, tokens, API Keys privadas y datos reservados de negocio protegidos (cero exposición en frontend/bundles JS, consola del navegador, repositorio o logs; `drop` de `console`/`debugger` y sin `.map` públicos) y variables de entorno separadas entre desarrollo y producción.
 - [ ] Autenticación, gestión de sesiones (cookies `HttpOnly`/`Secure`/`SameSite`, expiración, invalidación al cerrar sesión, revocación, anti-enumeración de correos) y autorización verificadas (prueba cruzada **IDOR/BOLA** entre usuarios).
 - [ ] **RLS (Row Level Security)** y permisos de base de datos, vistas, funciones y Storage revisados y probados.
 - [ ] Protección verificada contra inyecciones (SQL/NoSQL), XSS, CSRF, validación y cálculo de precios/permisos siempre en backend, y límites de tipo/tamaño en subida de archivos.
@@ -32,7 +32,7 @@
 - [ ] Credenciales privilegiadas (p. ej. `service_role key`) protegidas exclusivamente en backend/bóveda (nunca en frontend) y conexiones cifradas con límites/pool de conexiones.
 - [ ] Backups automáticos configurados (BD, archivos/documentos y configuraciones críticas), cifrados, verificando que realmente se generan (y copia *off-site* si el riesgo lo exige).
 - [ ] **Restauración de backups probada** con evidencia reciente (RPO y RTO definidos).
-- [ ] Políticas de retención/eliminación definidas, índices revisados y ausencia de consultas N+1 o almacenamiento de datos innecesarios.
+- [ ] Políticas de retención/eliminación definidas, fechas de auditoría (`created_at`/`updated_at` en `TIMESTAMPTZ` UTC con trigger automático) presentes en todas las tablas, índices revisados y ausencia de consultas N+1 o datos innecesarios.
 
 ## 4. IA y servicios externos (`6` puntos — Bloqueante si usa IA de pago)
 - [ ] Límites estrictos de llamadas por usuario, tokens de entrada/salida y **máximo de iteraciones por tarea** (`max_iterations`).
@@ -58,7 +58,7 @@
 - [ ] Etiquetas accesibles (`<label>`) en formularios y nombres accesibles en todos los botones.
 - [ ] Contraste suficiente (WCAG 2.2 AA), foco visible, independencia del color y zoom de texto hasta 200 % sin pérdida de contenido.
 - [ ] Diseño responsive Mobile First sin scroll horizontal, estados Loading/Empty/Error, confirmaciones de acciones críticas y optimización WebP/AVIF + Core Web Vitals.
-- [ ] Mensajes de error comprensibles y, en sitios públicos, SEO/publicación listos (`title`/description/favicon/Open Graph/canónicas, `robots.txt`/`sitemap.xml`, `/admin` con `noindex`, páginas `404`/`500` limpias y cero enlaces rotos).
+- [ ] Mensajes de error comprensibles, **`ErrorBoundary` global + vistas `400`/`403`/`404`/`500`/`503` + estado *offline***, y en sitios públicos SEO/publicación listos (`title`/description/favicon/Open Graph/canónicas, `robots.txt`/`sitemap.xml`, `/admin` con `noindex` y cero enlaces rotos).
 
 ## 7. Calidad y pruebas (`6` puntos)
 - [ ] Pruebas unitarias e integración en lógica crítica y BD/APIs reales (usando datos sintéticos, nunca PII real), ejecutándose en CI en cada PR.

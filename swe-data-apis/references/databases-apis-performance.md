@@ -27,11 +27,12 @@
 
 ### Convenciones adicionales recomendadas
 * Convenciones uniformes para tablas, columnas y relaciones.
-* Política de fechas y zonas horarias (almacenamiento en UTC).
+* **Fechas de auditoría en TODAS las tablas (`TIMESTAMPTZ` en UTC):** incluir `created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()` en cada tabla y `updated_at` en todas las tablas mutables, actualizado automáticamente mediante **trigger en base de datos** (`set_updated_at()`) para permitir auditorías en cualquier momento sin depender de la capa de aplicación.
+* Política de fechas y zonas horarias (almacenamiento siempre en UTC / ISO 8601).
 * Política de identificadores (UUIDv4/v7, secuenciales internos vs IDs públicos).
 * Estrategia de concurrencia (bloqueo optimista/pesimista) y límites de duración de transacciones.
 * Gestión de datos históricos / archivado.
-* Separación estricta de datos de **producción, desarrollo y pruebas**.
+* **Separación estricta de datos y semillas (`seed`):** distinguir datos de **producción, desarrollo y pruebas**, y separar semillas idempotentes de catálogo productivo (`seed.sql`) de fixtures ficticios de desarrollo/QA (nunca ejecutados en producción).
 * Control de acceso mínimo a la base de datos y **monitoreo de consultas lentas**.
 
 ---
