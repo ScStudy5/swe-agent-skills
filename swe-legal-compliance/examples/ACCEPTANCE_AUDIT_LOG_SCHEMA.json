@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Legal Acceptance Audit Event (NOM-151 Ready)",
+  "description": "Esquema técnico-legal append-only para registrar aceptación versionada de Términos, Aviso de Privacidad, Cookies o Contratos.",
+  "type": "object",
+  "required": [
+    "acceptance_id",
+    "subject_id",
+    "document_type",
+    "document_version",
+    "document_sha256",
+    "accepted_at_utc",
+    "consent_scope",
+    "evidence"
+  ],
+  "properties": {
+    "acceptance_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identificador único inmutable del evento de aceptación."
+    },
+    "subject_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "ID interno del usuario o identificador pseudonimizado del titular."
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "terms_of_service",
+        "privacy_notice_integral",
+        "privacy_notice_simplified",
+        "cookie_policy",
+        "subscription_renewal_terms",
+        "eula",
+        "saas_agreement",
+        "dpa"
+      ]
+    },
+    "document_version": {
+      "type": "string",
+      "pattern": "^v?[0-9]+\\.[0-9]+(\\.[0-9]+)?(-[a-zA-Z0-9._-]+)?$",
+      "description": "Versión exacta del texto legal exhibido al usuario."
+    },
+    "document_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "Hash SHA-256 en minúsculas del contenido íntegro del documento aceptado."
+    },
+    "accepted_at_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp UTC generado por el servidor (ISO 8601)."
+    },
+    "consent_scope": {
+      "type": "object",
+      "required": ["primary_purposes"],
+      "properties": {
+        "primary_purposes": { "type": "boolean" },
+        "secondary_marketing": { "type": "boolean" },
+        "analytics_cookies": { "type": "boolean" },
+        "third_party_transfers": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["source_channel", "locale", "ui_checkbox_preselected"],
+      "properties": {
+        "source_channel": { "type": "string", "enum": ["web", "ios", "android", "api", "desktop"] },
+        "locale": { "type": "string", "examples": ["es-MX", "en-US"] },
+        "ui_checkbox_preselected": {
+          "type": "boolean",
+          "const": false,
+          "description": "Debe ser siempre false (prohibido casillas premarcadas)."
+        },
+        "ip_hash": {
+          "type": "string",
+          "description": "Hash con sal o IP enmascarada conforme a la política de retención y privacidad."
+        },
+        "user_agent": { "type": "string", "maxLength": 512 },
+        "nom151_psc_constancia_id": {
+          "type": ["string", "null"],
+          "description": "Identificador de constancia de conservación NOM-151-SCFI-2016 emitida por PSC acreditado (Nivel 3 / contratos)."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "acceptance_id": "01948f2a-6c4d-7e90-8a1b-2c3d4e5f6a7b",
+      "subject_id": "usr_01J9EXAMPLE0001",
+      "document_type": "privacy_notice_integral",
+      "document_version": "v1.0.0",
+      "document_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "accepted_at_utc": "2026-11-21T22:30:00Z",
+      "consent_scope": {
+        "primary_purposes": true,
+        "secondary_marketing": false,
+        "analytics_cookies": true,
+        "third_party_transfers": false
+      },
+      "evidence": {
+        "source_channel": "web",
+        "locale": "es-MX",
+        "ui_checkbox_preselected": false,
+        "ip_hash": "sha256:9f86d081884c7d659a2feaa0c55ad015",
+        "user_agent": "Mozilla/5.0",
+        "nom151_psc_constancia_id": null
+      }
+    }
+  ]
+}

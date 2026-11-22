@@ -1,0 +1,56 @@
+# Base multi-stack .gitignore
+# Ajusta y conserva solo las secciones relevantes para tu proyecto.
+
+# --- Secretos y variables locales ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+
+# --- Sistemas operativos y editores ---
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# --- Logs y temporales ---
+*.log
+logs/
+tmp/
+temp/
+coverage/
+.nyc_output/
+htmlcov/
+
+# --- Node.js / Frontend ---
+node_modules/
+dist/
+build/
+.next/
+.nuxt/
+.output/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- .NET / C# ---
+bin/
+obj/
+*.user
+
+# --- Java / Kotlin ---
+target/
+.gradle/

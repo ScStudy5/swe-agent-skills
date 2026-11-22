@@ -1,0 +1,50 @@
+# Plantilla base de Dependabot (actualización segura de Actions y dependencias)
+# Destino recomendado en tu repo: .github/dependabot.yml
+# Mantiene actualizados tanto los SHAs de GitHub Actions como tus paquetes de aplicación.
+
+version: 2
+updates:
+  # 1. Mantener al día los SHAs fijados en .github/workflows/*.yml
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci(deps)"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # 2. Dependencias del proyecto (conserva o descomenta según tu stack real)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+
+  # - package-ecosystem: "pip"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "monday"
+  #   commit-message:
+  #     prefix: "chore(deps)"
+  #
+  # - package-ecosystem: "docker"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "monday"
+  #   commit-message:
+  #     prefix: "chore(docker)"

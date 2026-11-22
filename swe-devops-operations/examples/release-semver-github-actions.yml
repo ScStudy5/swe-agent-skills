@@ -1,0 +1,75 @@
+# Plantilla de Release automático por tags SemVer (vMAJOR.MINOR.PATCH)
+# Destino recomendado en tu repo: .github/workflows/release.yml
+# Usa `gh release create --generate-notes` nativo de GitHub CLI (cero acciones de terceros extra).
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish-release:
+    name: Build, Checksum & GitHub Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write # Necesario únicamente en este job para publicar GitHub Releases
+    steps:
+      - name: Checkout tagged commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Verify SemVer tag format
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          echo "Preparando release para tag: $TAG_NAME"
+          if ! [[ "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Error: el tag '$TAG_NAME' no cumple Semantic Versioning (vMAJOR.MINOR.PATCH)."
+            exit 1
+          fi
+
+      - name: Build & verify release artifacts
+        run: |
+          mkdir -p release-artifacts
+          echo "Reemplaza con tu comando de build/test y copia artefactos a release-artifacts/"
+
+      - name: Generate SHA-256 checksums for artifacts
+        run: |
+          if [ -n "$(ls -A release-artifacts 2>/dev/null)" ]; then
+            (cd release-artifacts && sha256sum * > SHA256SUMS.txt)
+          fi
+
+      - name: Publish GitHub Release with auto-generated notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          PRERELEASE_FLAG=""
+          if [[ "$TAG_NAME" == *"-"* ]]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
+          if [ -n "$(ls -A release-artifacts 2>/dev/null)" ]; then
+            gh release create "$TAG_NAME" release-artifacts/* \
+              --title "$TAG_NAME" \
+              --generate-notes \
+              --verify-tag \
+              $PRERELEASE_FLAG
+          else
+            gh release create "$TAG_NAME" \
+              --title "$TAG_NAME" \
+              --generate-notes \
+              --verify-tag \
+              $PRERELEASE_FLAG
+          fi

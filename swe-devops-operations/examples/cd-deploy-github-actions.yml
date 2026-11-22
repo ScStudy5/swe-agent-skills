@@ -1,0 +1,103 @@
+# Plantilla base de CD progresivo (Staging -> Producción con aprobación manual + OIDC)
+# Destino recomendado en tu repo: .github/workflows/cd.yml
+# Requisitos previos en GitHub (Settings -> Environments):
+#   1. Crea los ambientes `staging` y `production`.
+#   2. En `production`, activa "Required reviewers" (aprobación manual) y restringe ramas a `main`.
+#   3. Configura federación OIDC con tu nube (AWS/Azure/GCP/Cloudflare) en lugar de llaves estáticas.
+
+name: CD
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: "Ambiente objetivo"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - production
+
+permissions:
+  contents: read
+
+concurrency:
+  # En CD nunca cancelar un despliegue en curso para evitar estados a medias.
+  group: cd-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: staging
+      url: ${{ vars.STAGING_URL }}
+    permissions:
+      contents: read
+      id-token: write # Necesario para autenticación federada OIDC sin credenciales estáticas
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Authenticate via OIDC (adaptar al proveedor cloud)
+        run: echo "Reemplaza con aws-actions/configure-aws-credentials / azure/login / google-github-actions/auth fijado por SHA"
+
+      - name: Run database migrations (staging, compatibles hacia atrás)
+        run: echo "Reemplaza con tu comando de migración en staging"
+
+      - name: Deploy artifact / container to staging
+        run: echo "Reemplaza con el despliegue real a staging (Docker/Cloud Run/ECS/App Service/Workers)"
+
+      - name: Post-deploy Health Check (staging)
+        env:
+          HEALTH_URL: ${{ vars.STAGING_HEALTH_URL }}
+        run: |
+          if [ -z "$HEALTH_URL" ]; then
+            echo "Configura la variable de ambiente STAGING_HEALTH_URL (ej. https://staging.tu-app.com/health)"
+            exit 0
+          fi
+          curl --fail --silent --show-error --retry 5 --retry-delay 5 --max-time 10 "$HEALTH_URL"
+
+  deploy-production:
+    name: Deploy to Production
+    needs: deploy-staging
+    if: github.event_name == 'push' || inputs.deploy_target == 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment:
+      name: production
+      url: ${{ vars.PRODUCTION_URL }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Authenticate via OIDC (production role)
+        run: echo "Reemplaza con autenticación OIDC hacia rol exclusivo de producción"
+
+      - name: Run backward-compatible migrations (production)
+        run: echo "Reemplaza con migración controlada (expand-and-contract)"
+
+      - name: Deploy artifact / container to production
+        run: echo "Reemplaza con despliegue a producción (preferir Blue-Green / Canary en Nivel 2-3)"
+
+      - name: Post-deploy Health Check (production)
+        env:
+          HEALTH_URL: ${{ vars.PRODUCTION_HEALTH_URL }}
+        run: |
+          if [ -z "$HEALTH_URL" ]; then
+            echo "Configura PRODUCTION_HEALTH_URL (ej. https://tu-app.com/health)"
+            exit 0
+          fi
+          curl --fail --silent --show-error --retry 5 --retry-delay 5 --max-time 10 "$HEALTH_URL"
+
+      - name: Automatic rollback hook on failure
+        if: failure()
+        run: echo "Ejecuta aquí tu comando de rollback a la revisión estable anterior y notifica al canal de incidentes"

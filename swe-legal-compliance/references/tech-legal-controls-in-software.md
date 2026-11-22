@@ -1,0 +1,58 @@
+# Controles Técnico-Legales dentro del Software (Puntos 10 y 11)
+
+El cumplimiento legal no se resuelve solo colgando un PDF en el pie de página: el software debe implementar controles verificables que respalden lo prometido en el Aviso de Privacidad y los Términos y Condiciones.
+
+---
+
+## 1. Consentimiento granular y sin patrones oscuros (*Dark Patterns*)
+* **Cero casillas premarcadas:** los checkboxes de aceptación de Términos/Privacidad, finalidades secundarias (marketing/newsletter) y cookies no esenciales deben iniciar siempre **desmarcados** (`checked = false`).
+* **Separación estricta:** nunca mezcles en una sola casilla obligatoria la aceptación del servicio con el consentimiento para publicidad o cesión de datos a terceros.
+* **Bloqueo previo en cookies/rastreadores:** ningún script de analítica publicitaria o pixel de terceros debe dispararse antes de que el usuario otorgue su consentimiento expreso (las cookies estrictamente necesarias de sesión/seguridad/CSRF sí pueden cargarse).
+* **Simetría de decisión:** los botones *"Aceptar"* y *"Rechazar / Solo necesarias"* deben tener jerarquía visual y accesibilidad equivalentes.
+
+---
+
+## 2. Registro inmutable de aceptación y evidencia electrónica (Punto 11 / NOM-151)
+Cada vez que un usuario acepta Términos y Condiciones, Aviso de Privacidad, Política de Cookies o un contrato B2B, el backend debe registrar un evento **append-only** (nunca sobrescribir aceptaciones anteriores) siguiendo [ACCEPTANCE_AUDIT_LOG_SCHEMA.json](../examples/ACCEPTANCE_AUDIT_LOG_SCHEMA.json):
+
+* `acceptance_id`: UUID único del registro.
+* `subject_id`: identificador interno del usuario/cuenta (o identificador pseudonimizado en formularios públicos).
+* `document_type`: `terms_of_service` | `privacy_notice` | `cookie_policy` | `dpa` | `subscription_renewal`.
+* `document_version`: versión semántica o fechada (p. ej. `2026-01-15` o `v2.1.0`).
+* `document_sha256`: hash criptográfico `SHA-256` del texto exacto exhibido al usuario al momento de aceptar.
+* `accepted_at_utc`: timestamp ISO 8601 en UTC generado por el **servidor** (nunca confiar en el reloj del cliente).
+* `consent_scope`: objeto booleano granular (p. ej. `primary_purposes`, `marketing`, `analytics_cookies`).
+* `evidence`: `ip_hash` o IP según retención legal, `user_agent`, `locale`, `source_channel` (`web`, `ios`, `android`, `api`) y, en Nivel 3 / contratos de alto valor, referencia `nom151_psc_constancia_id` emitida por un PSC acreditado bajo **NOM-151-SCFI-2016**.
+
+---
+
+## 3. Centro de Privacidad y Flujo de Derechos ARCO
+Implementar un módulo o sección accesible desde la configuración de cuenta (y un canal público para ex-usuarios o no registrados):
+
+1. **Acceso y Portabilidad (Exportación):** permitir descargar un paquete legible por máquina (`JSON` o `CSV`) con los datos personales del titular previa verificación de identidad (re-autenticación o enlace firmado con TTL corto).
+2. **Rectificación:** permitir editar datos personales propios desde el perfil o solicitar corrección de datos verificados (con bitácora de cambio).
+3. **Cancelación y Eliminación de cuenta:**
+   * Flujo autoservicio visible (sin obligar a llamadas telefónicas o correos manuales innecesarios si el alta fue digital).
+   * Confirmación explícita de consecuencias irreversibles.
+   * **Eliminación real o anonimización criptográfica** en BD principal, índices de búsqueda y colas, respetando únicamente bloqueos de retención legal obligatoria (p. ej. comprobantes fiscales CFDI o bitácoras antifraude exigidas por ley, debidamente aislados y con fecha de purga).
+4. **Oposición y Revocación:** interruptores (*toggles*) para desactivar correos promocionales, perfilamiento secundario o cookies opcionales con efecto inmediato y persistido en el historial de consentimiento.
+5. **Trazabilidad de solicitudes ARCO:** generar un folio único, fecha de recepción UTC y alertas internas para responder dentro del plazo legal vigente.
+
+---
+
+## 4. Transparencia en cobros, suscripciones y cancelación (LFPC 76 Bis / 76 Bis 1)
+* Mostrar **precio final desglosado** (subtotal, IVA/impuestos, moneda y periodicidad) antes del botón definitivo de pago.
+* Enviar comprobante de compra/suscripción con acceso a facturación (CFDI) y enlace a políticas vigentes.
+* En suscripciones con renovación automática: enviar aviso previo configurable antes del cobro y ofrecer botón **"Cancelar suscripción"** en pocos clics dentro de la cuenta, mostrando la fecha exacta hasta la cual conserva acceso.
+
+---
+
+## 5. Control de edad y protección de menores
+* Si el servicio **no** está dirigido a menores de edad: incorporar declaración/verificación de mayoría de edad acorde a la jurisdicción antes de crear cuenta y cláusula de baja inmediata si se detecta uso por menores sin autorización.
+* Si el servicio **sí** permite menores (EdTech, videojuegos, etc.): activar privacidad máxima por defecto (perfiles privados, cero publicidad comportamental), consentimiento parental verificable y aplicar además `swe-domain-discovery`.
+
+---
+
+## 6. Versionado de textos legales y re-aceptación
+* Versionar cada documento legal en Git (junto con su hash `SHA-256`) y mantener accesible el historial de versiones publicadas.
+* Cuando exista un cambio **sustancial** (nuevas finalidades de datos, nuevas transferencias, cambio de tarifas/condiciones), notificar con antelación razonable y solicitar re-aceptación registrada en el siguiente inicio de sesión o antes de aplicar las nuevas condiciones.

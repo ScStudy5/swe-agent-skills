@@ -1,0 +1,59 @@
+# Plantilla de Issue Form para Reporte de Bugs
+# Destino recomendado en tu repo: .github/ISSUE_TEMPLATE/bug_report.yml
+
+name: "Reporte de Bug"
+description: "Reporta un fallo reproducible o comportamiento inesperado (no uses Issues públicos para vulnerabilidades de seguridad)."
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > **¿Es una vulnerabilidad de seguridad?** NO abras un Issue público. Sigue las instrucciones privadas en `SECURITY.md`.
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "Severidad percibida"
+      options:
+        - "Crítica (caída o pérdida de datos)"
+        - "Alta (flujo principal bloqueado sin workaround)"
+        - "Media (fallo con workaround)"
+        - "Baja (detalle menor / cosmético)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Descripción del problema"
+      placeholder: "Describe con claridad qué ocurrió y qué esperabas que sucediera."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Pasos para reproducir"
+      placeholder: |
+        1. Ir a '...'
+        2. Ejecutar '...'
+        3. Observar el error '...'
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: "Entorno / Versión"
+      placeholder: "Ej. Producción v1.4.2 / Chrome 131 / Windows 11"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Evidencia o logs relevantes (sin secretos ni PII)"
+      placeholder: "Pega únicamente el fragmento de error relevante o Correlation ID (nunca tokens ni datos personales)."
+    validations:
+      required: false

@@ -1,0 +1,26 @@
+# Plantilla base de CODEOWNERS
+# Destino recomendado en tu repo: .github/CODEOWNERS
+# Sustituye @org/equipo o @usuario por los responsables reales de revisión.
+# Activa "Require review from Code Owners" en Branch Protection (Nivel 2-3).
+
+# Propietarios por defecto de todo el repositorio
+* @tu-org/core-team
+
+# Zonas críticas de seguridad, CI/CD e infraestructura (revisión obligatoria)
+/.github/ @tu-org/devops-security
+/Dockerfile @tu-org/devops-security
+/docker-compose.yml @tu-org/devops-security
+/infra/ @tu-org/devops-security
+/SECURITY.md @tu-org/devops-security
+
+# Zonas sensibles de negocio (autenticación, pagos, migraciones de BD)
+/src/auth/ @tu-org/backend-leads
+/src/billing/ @tu-org/backend-leads
+/prisma/migrations/ @tu-org/backend-leads
+/migrations/ @tu-org/backend-leads
+
+# Reglas de contexto IA, documentación legal y handover
+/CONSTITUTION.md @tu-org/tech-leads
+/AGENTS.md @tu-org/tech-leads
+/LEGAL-DOCS/ @tu-org/product-legal
+/PROJECT-HANDOVER/ @tu-org/tech-leads

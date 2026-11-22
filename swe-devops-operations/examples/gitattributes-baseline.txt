@@ -1,0 +1,44 @@
+# Plantilla base .gitattributes (normalización LF y protección de binarios)
+# Destino recomendado en tu repo: .gitattributes
+
+# Auto-detectar archivos de texto y normalizar a LF al hacer commit
+* text=auto eol=lf
+
+# Forzar LF en scripts y configuraciones sensibles a fin de línea (Linux/CI/Docker)
+*.sh text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+Dockerfile text eol=lf
+Makefile text eol=lf
+
+# Scripts exclusivos de Windows
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Evitar corrupción de archivos binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.zip binary
+
+# Colapsar diffs automáticos de lockfiles en Pull Requests
+package-lock.json linguist-generated=true
+pnpm-lock.yaml linguist-generated=true
+yarn.lock linguist-generated=true
+poetry.lock linguist-generated=true
+uv.lock linguist-generated=true
+Cargo.lock linguist-generated=true

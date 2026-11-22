@@ -1,0 +1,45 @@
+# Plantilla de Issue Form para Solicitud de Funcionalidad
+# Destino recomendado en tu repo: .github/ISSUE_TEMPLATE/feature_request.yml
+
+name: "Solicitud de Funcionalidad"
+description: "Propón una nueva funcionalidad o mejora con criterios de aceptación verificables."
+title: "[Feat]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Problema o necesidad que resuelve"
+      placeholder: "Explica qué problema tienen los usuarios o el equipo y por qué importa."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: "Solución propuesta"
+      placeholder: "Describe el comportamiento esperado de forma concisa."
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: "Criterios de aceptación verificables (DoR)"
+      placeholder: |
+        - [ ] Dado ..., cuando ..., entonces ...
+        - [ ] Manejo de errores y casos borde considerados
+        - [ ] Impacto en seguridad/privacidad/costos evaluado
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "Prioridad sugerida (MoSCoW)"
+      options:
+        - "Must (crítico para el hito)"
+        - "Should (importante)"
+        - "Could (deseable si hay capacidad)"
+    validations:
+      required: false

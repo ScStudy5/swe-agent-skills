@@ -1,0 +1,48 @@
+# Validación automática de Pull Requests (Conventional Commits + tamaño de PR)
+# Destino recomendado en tu repo: .github/workflows/pr-validation.yml
+# Seguridad: las expresiones de evento se pasan siempre por `env:` para prevenir script injection.
+
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: pr-validation-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  pr-title-and-size:
+    name: PR Title & Size Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Validate Conventional Commit PR title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          PATTERN='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9._/-]+\))?(!)?: .+'
+          if ! printf '%s\n' "$PR_TITLE" | grep -Eq "$PATTERN"; then
+            echo "::error::El título del PR no cumple Conventional Commits: '$PR_TITLE'"
+            echo "Ejemplos válidos: 'feat(auth): agrega soporte OIDC' o 'fix: corrige validación de fecha'"
+            exit 1
+          fi
+          echo "Título de PR válido: $PR_TITLE"
+
+      - name: Check PR size (anti-PR gigante / anti-vibe-coding)
+        env:
+          ADDITIONS: ${{ github.event.pull_request.additions }}
+          DELETIONS: ${{ github.event.pull_request.deletions }}
+          CHANGED_FILES: ${{ github.event.pull_request.changed_files }}
+          MAX_RECOMMENDED_LINES: 600
+        run: |
+          TOTAL=$((ADDITIONS + DELETIONS))
+          echo "Tamaño del PR: +${ADDITIONS} / -${DELETIONS} (total ${TOTAL} líneas en ${CHANGED_FILES} archivos)"
+          if [ "$TOTAL" -gt "$MAX_RECOMMENDED_LINES" ]; then
+            echo "::warning::Este PR supera ${MAX_RECOMMENDED_LINES} líneas modificadas. Considera dividirlo en lotes más pequeños para facilitar la revisión y reducir riesgo."
+          fi

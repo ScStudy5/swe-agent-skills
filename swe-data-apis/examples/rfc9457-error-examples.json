@@ -1,0 +1,42 @@
+{
+  "validation_error_422": {
+    "type": "https://api.example.com/errors/validation-error",
+    "title": "Validation Failed",
+    "status": 422,
+    "detail": "One or more request fields failed validation.",
+    "instance": "/api/v1/users",
+    "correlationId": "req-9f8e7d6c5b4a",
+    "errors": [
+      {
+        "field": "email",
+        "code": "INVALID_FORMAT",
+        "message": "Must be a valid email address."
+      }
+    ]
+  },
+  "unauthorized_401": {
+    "type": "https://api.example.com/errors/unauthorized",
+    "title": "Authentication Required",
+    "status": 401,
+    "detail": "Access token is missing or expired.",
+    "instance": "/api/v1/orders",
+    "correlationId": "req-1a2b3c4d5e6f"
+  },
+  "conflict_409": {
+    "type": "https://api.example.com/errors/resource-conflict",
+    "title": "Resource Conflict",
+    "status": 409,
+    "detail": "An order with the provided idempotency key already exists.",
+    "instance": "/api/v1/orders",
+    "correlationId": "req-7c8d9e0f1a2b"
+  },
+  "rate_limited_429": {
+    "type": "https://api.example.com/errors/rate-limit-exceeded",
+    "title": "Too Many Requests",
+    "status": 429,
+    "detail": "Rate limit exceeded. Retry after 30 seconds.",
+    "instance": "/api/v1/auth/login",
+    "correlationId": "req-3b4c5d6e7f8a",
+    "retryAfterSeconds": 30
+  }
+}
