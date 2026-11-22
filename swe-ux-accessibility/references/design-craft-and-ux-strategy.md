@@ -63,15 +63,21 @@ Define siempre los valores como **Design Tokens** (CSS custom properties / tema 
 * **Semántica accesible:** define tokens de estado (`success`, `warning`, `danger`, `info`) verificando contraste mínimo **WCAG AA** (`4.5:1` texto normal, `3:1` texto grande y componentes UI) tanto en modo claro como oscuro.
 * **Antipatrones genéricos a evitar:** gradientes morado/azul neón sin relación con la marca, abuso de *glassmorphism* con texto poco legible, exceso de tarjetas anidadas dentro de tarjetas, sombras exageradas y uso de emojis como sustituto de iconografía profesional.
 
-### D. Animaciones y microinteracciones
-* **Propósito funcional, nunca decoración lenta:** cada animación debe comunicar feedback inmediato (hover/press/loading), orientar espacialmente (abrir panel/drawer) o dar continuidad de estado.
-* **Duraciones y curvas calibradas:**
-  * Microinteracciones (botones, toggles, tooltips): `120–180ms`.
-  * Transiciones de layout/modales/drawers: `200–320ms` (evitar animaciones > `400ms` que hagan sentir lenta la app).
-  * Curvas naturales: `ease-out` para entradas (ej. `cubic-bezier(0.16, 1, 0.3, 1)`), `ease-in` para salidas; evitar `linear` salvo en spinners/progreso continuo.
-* **Rendimiento y accesibilidad:** anima preferentemente propiedades del compositor (**`transform`** y **`opacity`**) evitando reflows (`width`, `height`, `top`, `left`), y respeta siempre `@media (prefers-reduced-motion: reduce)`.
+### D. Animaciones, microinteracciones y oficio *Design Engineering* (estilo Emil Kowalski)
+* **Cuándo SÍ y cuándo NO animar:** las interacciones de alta frecuencia (navegación por teclado, cambio de pestañas, filtros rápidos) deben ser **instantáneas o `<= 150ms`**; nunca añadas animaciones decorativas que frenen al usuario.
+* **Física y origen natural:**
+  * Microinteracciones y feedback táctil: `120–160ms`, ligera compresión en botones al presionar (`transform: scale(0.97)` en `:active`).
+  * Popovers, menús desplegables y modales: entrada **consciente del origen** (*origin-aware*) combinando `opacity` + `transform: scale(0.96 -> 1)` en `180–240ms` con curva `ease-out` (`cubic-bezier(0.16, 1, 0.3, 1)`), nunca rebotes exagerados ni `linear` salvo progreso continuo.
+  * Toda transición debe ser **interrumpible** (CSS transitions o springs que responden si el usuario cambia de acción a mitad del movimiento).
+* **Rendimiento y accesibilidad:** anima únicamente propiedades del compositor (**`transform`** y **`opacity`**), evitando reflows (`width`, `height`, `top`, `left`), y respeta siempre `@media (prefers-reduced-motion: reduce)`.
 
-### E. Iconografía e imaginería
+### E. Patrones web modernos, layout sólido y preservación de formularios
+* **Layout `100dvh` con *sticky footer* obligatorio:** toda aplicación web debe usar `min-height: 100dvh; display: flex; flex-direction: column;` en el contenedor raíz y `main { flex: 1; }` para que **el `<footer>` nunca flote a mitad de pantalla** en vistas cortas (`/cookies`, `/login`, `/404`).
+* **Responsive real (no solo "cero overflow"):** diseña y comprueba proporciones, legibilidad y densidad en **móvil (`390×844`)**, **tablet (`768×1024`)**, **laptop (`1440×900`)** y **monitor amplio (`1920×1080`)**. Aprovecha patrones modernos de plataforma: `<dialog>` nativo / Popover API, unidades `dvh`/`svh`, CSS Container Queries, `:has()`, `subgrid` y ***code splitting* por ruta** para evitar bundles iniciales pesados.
+* **Regla estricta de preservación de formularios:** todo enlace de consulta incrustado dentro de un formulario activo (Términos y Condiciones, Aviso de Privacidad, Política de Cookies, Ayuda) **debe abrirse en una nueva pestaña (`target="_blank" rel="noopener noreferrer"`) o en un modal/drawer accesible sin desmontar el formulario**, garantizando que el usuario **jamás pierda lo que ya escribió**.
+* **Alineación óptica y acabado:** revisa alineación óptica de iconos con texto, bordes compuestos consistentes y estados vacíos útiles; evita rellenar pantallas con tarjetas planas repetitivas sin jerarquía.
+
+### F. Iconografía e imaginería
 * Usa **un solo set de iconos coherente** (mismo grosor de trazo, esquinas y tamaño óptico: `16px`, `20px`, `24px`).
 * Usa imágenes reales, recortes consistentes (`aspect-ratio` + `object-cover`) y nunca mezcles ilustraciones 3D, flat y fotos de stock incompatibles en la misma vista.
 
@@ -87,11 +93,13 @@ No apruebes una interfaz solo leyendo código HTML/CSS: **mírala renderizada en
      --routes /,/dashboard,/login --screenshots-dir .audit-screenshots --out audit-report.json
    ```
    *(Agrega `--color-scheme both` si la aplicación soporta modo claro y modo oscuro.)*
-2. **Inspeccionar las capturas (`desktop` `1440×900`, `tablet` `768×1024`, `mobile` `390×844` — tanto *above the fold* como `fullPage`)** aplicando este checklist de crítica visual:
+2. **Inspeccionar las capturas (`wide` `1920×1080`, `desktop` `1440×900`, `tablet` `768×1024`, `mobile` `390×844` — tanto *above the fold* como `fullPage`, incluyendo páginas cortas como `/login` o `/cookies`)** aplicando este checklist de crítica visual:
    * **Test de los 3 segundos (primer pantallazo):** ¿se entiende de inmediato qué es el producto y cuál es la acción principal *above the fold* sin hacer scroll?
+   * **Layout de página corta y pantalla grande:** ¿el *footer* descansa al fondo en páginas cortas (`100dvh`) sin dejar huecos vacíos debajo? ¿El ancho se ve equilibrado en `1920×1080`?
    * **Jerarquía y tipografía:** ¿destaca el titular principal sobre subtítulos y cuerpo? ¿Algún bloque tiene líneas demasiado largas (`>75ch`), texto cortado o huérfanos incómodos?
    * **Espaciado y alineación:** ¿hay elementos apretados, márgenes inconsistentes, bordes desalineados o exceso de espacio muerto?
-   * **Identidad vs. genérico:** ¿se ve como una plantilla genérica repetitiva o tiene dirección visual coherente y limpia?
+   * **Identidad vs. genérico:** ¿se ve como una plantilla genérica repetitiva o tiene dirección visual coherente, microinteracciones limpias y acabado real?
+   * **Formularios sin pérdida de progreso:** ¿los enlaces legales/ayuda dentro de formularios abren en nueva pestaña (`target="_blank"`) o modal sin borrar lo escrito?
    * **Contraste y estados:** ¿todo texto, placeholder, borde de input y botón tiene contraste claro en modo claro y oscuro?
    * **Responsive real:** ¿hay overflow horizontal, menús rotos, botones demasiado pequeños en móvil o tablas que desbordan sin scroll contenido?
 3. **Iterar y volver a capturar:** corrige los hallazgos detectados y ejecuta una nueva captura con Playwright para confirmar visualmente la mejora antes de dar por cerrada la tarea. *(No subas carpetas temporales de capturas a Git).*

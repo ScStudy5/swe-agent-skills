@@ -22,7 +22,8 @@ Aplica esta skill cuando diseñes la estructura de un sistema, revises la calida
 ## Flujo de trabajo
 
 ### 1. Planificar o diseñar arquitectura (Proyecto / Módulo nuevo)
-1. Evalúa el tamaño y complejidad real del sistema para evitar sobreingeniería (**KISS** y **YAGNI**):
+1. Evalúa el tamaño y complejidad real del sistema para evitar sobreingeniería (**KISS** y **YAGNI**) y **compara explícitamente 2–3 arquitecturas candidatas** antes de cerrar el stack:
+   * Evalúa en cada opción: **experiencia del usuario (latencia y *cold starts* en capas gratuitas —p. ej. servicios que duermen tras 15 min vs. Edge/Workers—)**, costo operativo, límites del plan, portabilidad (*sin vendor lock-in*) y esfuerzo de mantenimiento.
    * Usa capas simples con separación de responsabilidades en MVPs.
    * Aplica **Clean Architecture** (dominio, aplicación, infraestructura, presentación) y **Domain-Driven Design (DDD)** cuando la lógica de negocio compleja lo justifique.
 2. Verifica los principios estructurales en [architecture-and-code-quality.md](./references/architecture-and-code-quality.md):

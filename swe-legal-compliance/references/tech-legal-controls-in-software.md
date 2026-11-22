@@ -9,6 +9,16 @@ El cumplimiento legal no se resuelve solo colgando un PDF en el pie de página: 
 * **Separación estricta:** nunca mezcles en una sola casilla obligatoria la aceptación del servicio con el consentimiento para publicidad o cesión de datos a terceros.
 * **Bloqueo previo en cookies/rastreadores:** ningún script de analítica publicitaria o pixel de terceros debe dispararse antes de que el usuario otorgue su consentimiento expreso (las cookies estrictamente necesarias de sesión/seguridad/CSRF sí pueden cargarse).
 * **Simetría de decisión:** los botones *"Aceptar"* y *"Rechazar / Solo necesarias"* deben tener jerarquía visual y accesibilidad equivalentes.
+* **No destruir formularios al consultar textos legales:** todo enlace a Términos, Aviso de Privacidad o Política de Cookies dentro de un formulario de registro, checkout o lista de espera **debe abrirse en nueva pestaña (`target="_blank" rel="noopener noreferrer"`) o en un modal accesible sin desmontar el formulario**, evitando que el usuario pierda los datos ya capturados.
+
+---
+
+## 1.5 Paridad obligatoria entre `LEGAL-DOCS/` y las páginas públicas de la app
+* **Prohibido publicar resúmenes improvisados de 2–4 líneas** en `/privacidad`, `/terminos` o `/cookies`. La UI pública debe reflejar de forma íntegra y estructurada el contenido de `LEGAL-DOCS/`:
+  * **Aviso de Privacidad (`/privacidad`):** identidad, domicilio y contacto del responsable; **tabla completa de datos personales recabados** (categoría, finalidad primaria vs. secundaria, retención y base legal); **transferencias y proveedores terceros** (hosting, BD, CDN, correo, IA y país/región); **procedimiento paso a paso y plazos legales ARCO**; revocación y mecanismo de notificación de cambios.
+  * **Términos y Condiciones (`/terminos`):** alcance del servicio, elegibilidad/edad, uso aceptable y prohibiciones, propiedad intelectual, precios/cancelaciones/reembolsos (si aplica), limitación de responsabilidad, soporte y ley/jurisdicción aplicable.
+  * **Política de Cookies (`/cookies`):** explicación clara de cookies y almacenamiento local (`localStorage`), **tabla concreta** (nombre exacto, proveedor, tipo esencial/opcional, finalidad y duración), cómo gestionarlas o revocarlas y enlace al banner/preferencias.
+* Mientras existan marcadores legales pendientes de llenado o validación jurídica, mostrar claramente el estado de borrador antes de abrir cobros o tráfico comercial masivo.
 
 ---
 

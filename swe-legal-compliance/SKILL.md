@@ -49,10 +49,11 @@ Aplica esta skill cuando necesites estructurar el paquete legal base de un produ
 
 ### Modo B — Implementar controles técnico-legales dentro del software (Punto 10 y 11)
 Consulta [tech-legal-controls-in-software.md](./references/tech-legal-controls-in-software.md) para traducir obligaciones legales a requisitos implementables en código:
-1. **Consentimiento granular en UI:** sin casillas premarcadas, separación entre finalidades primarias/secundarias y cookies no esenciales bloqueadas antes del consentimiento.
-2. **Evidencia electrónica de aceptación:** persistir versión exacta del documento, hash `SHA-256` del texto aceptado, timestamp UTC, canal y trazabilidad (ver [ACCEPTANCE_AUDIT_LOG_SCHEMA.json](./examples/ACCEPTANCE_AUDIT_LOG_SCHEMA.json)); integrar constancia de conservación **NOM-151-SCFI-2016** cuando el modelo exija valor probatorio reforzado.
-3. **Centro de Privacidad y derechos ARCO:** flujo de solicitud ARCO con acuse y seguimiento de plazos, exportación portable de datos y eliminación/anonimización de cuenta respetando retenciones legales obligatorias.
-4. **Control de edad y renovaciones transparentes:** filtro de edad / consentimiento parental verificable cuando aplique y botón/flujo claro de cancelación de suscripciones sin fricción abusiva.
+1. **Consentimiento granular en UI y preservación de formularios:** sin casillas premarcadas, separación entre finalidades primarias/secundarias, cookies no esenciales bloqueadas antes del consentimiento y **enlaces legales dentro de formularios abriendo siempre en nueva pestaña (`target="_blank" rel="noopener noreferrer"`) o modal** para no perder el progreso del usuario.
+2. **Paridad `LEGAL-DOCS/` ↔ UI pública:** las páginas públicas (`/privacidad`, `/terminos`, `/cookies`) deben publicar el contenido íntegro y estructurado (responsable, tabla de datos y finalidades, transferencias/terceros, tabla exacta de cookies y procedimiento/plazos ARCO), **nunca resúmenes improvisados de 2–4 líneas**.
+3. **Evidencia electrónica de aceptación:** persistir versión exacta del documento, hash `SHA-256` del texto aceptado, timestamp UTC, canal y trazabilidad (ver [ACCEPTANCE_AUDIT_LOG_SCHEMA.json](./examples/ACCEPTANCE_AUDIT_LOG_SCHEMA.json)); integrar constancia de conservación **NOM-151-SCFI-2016** cuando el modelo exija valor probatorio reforzado.
+4. **Centro de Privacidad y derechos ARCO:** flujo de solicitud ARCO con acuse y seguimiento de plazos, exportación portable de datos y eliminación/anonimización de cuenta respetando retenciones legales obligatorias.
+5. **Control de edad y renovaciones transparentes:** filtro de edad / consentimiento parental verificable cuando aplique y botón/flujo claro de cancelación de suscripciones sin fricción abusiva.
 
 ### Modo C — Auditar preparación legal de lanzamiento (`Legal Launch Readiness 0/36`)
 1. Ejecuta el diagnóstico de solo lectura con [legal_readiness_check.py](./scripts/legal_readiness_check.py):

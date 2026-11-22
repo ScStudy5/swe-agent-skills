@@ -30,6 +30,16 @@ Usa esta skill como punto de entrada para establecer estándares profesionales d
 
 ## Flujo de trabajo
 
+### 0. Entrevista de Descubrimiento obligatoria (antes de crear código en proyectos nuevos)
+Antes de proponer archivos o escribir la primera línea de código en un proyecto nuevo, haz un cuestionario breve (5–7 preguntas concretas en un solo turno) si el usuario aún no definió estos puntos:
+1. **Problema y usuario final:** ¿qué problema resuelve y quién lo usará (móvil/escritorio, país/idioma)?
+2. **Nivel y presupuesto real:** ¿Nivel `1. MVP`, `2. Profesional` o `3. Empresarial`? ¿Presupuesto mensual (\$0 estricto en capas gratuitas o presupuesto acotado)?
+3. **Estética y referencias visuales:** ¿qué marcas/productos te gustan visualmente, qué tono buscas y necesitas modo claro/oscuro?
+4. **Datos, pagos e IA:** ¿pedirá cuentas/datos personales/sensibles, cobrará dinero o usará modelos de IA?
+5. **Stack y restricciones:** ¿tienes tecnologías preferidas o requisitos de despliegue?
+
+*Si el usuario responde "libre elección / usa defaults", presenta primero un **resumen de 5–8 líneas + comparativa de 2–3 arquitecturas** (incluyendo latencia/*cold starts* de capas gratuitas) y espera confirmación rápida antes de generar todo el repositorio.*
+
 ### 1. Clasificar el nivel del proyecto y su perfil
 Antes de recomendar controles o auditar, pregunta explícitamente (si el usuario aún no lo indicó) **hasta qué nivel quiere llevar el proyecto**:
 

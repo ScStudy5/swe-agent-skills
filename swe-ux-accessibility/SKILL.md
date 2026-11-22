@@ -29,7 +29,8 @@ Aplica esta skill en cualquier aplicación con interfaz de usuario (web, PWA, m�
    * **Tipografía:** par tipográfico intencional, escala modular clara, `line-height` por rol, ancho de lectura `45–75ch` y `tabular-nums` en métricas/tablas.
    * **Espaciado y composición:** escala `4px/8px` (micro/componente/grupo/sección), ley de proximidad, alineación en rejilla y variedad compositiva (evitar filas repetitivas de tarjetas genéricas).
    * **Color y superficies:** proporción `60-30-10`, neutros con matiz, bordes sutiles, contraste WCAG AA y evitar clichés genéricos (gradientes neón sin propósito, abuso de sombras/glassmorphism o emojis como iconos).
-   * **Animaciones y microinteracciones:** propósito funcional, duraciones calibradas (`120–320ms`), curvas `ease-out`/`ease-in`, solo `transform`/`opacity` y respeto a `prefers-reduced-motion`.
+   * **Animaciones y oficio *Design Engineering*:** acciones frecuentes instantáneas o `<=150ms`, popovers/modales *origin-aware* (`scale(0.96->1)` + `opacity`), feedback táctil (`scale(0.97)`), solo `transform`/`opacity` y respeto a `prefers-reduced-motion`.
+   * **Layout moderno y preservación de formularios:** `min-height: 100dvh` con *sticky footer* (cero footers flotando en páginas cortas), *code splitting* por ruta, patrones modernos (`<dialog>`, `dvh`, Container Queries) y **enlaces legales/ayuda dentro de formularios siempre con `target="_blank" rel="noopener noreferrer"` o modal** para nunca perder lo que el usuario ya escribió.
 3. **Mobile First, Responsive y Estados de UI:** define breakpoints, CSS Grid/Flexbox, áreas táctiles ≥ `44×44px`, cero scroll horizontal y contempla siempre los **4 estados clave** de cada pantalla/componente:
    * Datos cargados (estado normal)
    * **Loading** (esqueletos o indicadores claros)

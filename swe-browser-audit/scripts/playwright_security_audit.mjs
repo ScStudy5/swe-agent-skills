@@ -75,13 +75,14 @@ const USAGE =
   "  --probe-forms            ejecuta sondas seguras no destructivas sobre formularios\n" +
   "  --include-risky-forms    tambien prueba formularios de borrado/pago/logout (solo con datos de prueba)\n" +
   "  --max-forms <n>          maximo de formularios a sondear por ruta (default: 10)\n" +
-  "  --screenshots-dir <dir>  captura PNGs (desktop 1440x900, tablet 768x1024, mobile 390x844; fold + fullPage) para revision visual\n" +
+  "  --screenshots-dir <dir>  captura PNGs (wide 1920x1080, desktop 1440x900, tablet 768x1024, mobile 390x844; fold + fullPage) para revision visual\n" +
   "  --color-scheme <mode>    esquema de color al capturar screenshots: light | dark | both (default: light)\n" +
   "  --allow-remote           autoriza auditar un host staging no local (solo entornos autorizados)\n" +
   "  --out <archivo.json>     guarda el reporte JSON detallado en disco\n" +
   "  Nota: IDOR/CSRF requieren dos usuarios y se verifican manualmente (ver SKILL.md).";
 
 const SCREENSHOT_VIEWPORTS = [
+  { name: "wide", width: 1920, height: 1080 },
   { name: "desktop", width: 1440, height: 900 },
   { name: "tablet", width: 768, height: 1024 },
   { name: "mobile", width: 390, height: 844 },
@@ -343,9 +344,45 @@ async function auditRoute(
     }
   }
 
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  const wideOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth > window.innerWidth
+  );
+
+  await page.setViewportSize({ width: 1440, height: 900 });
   const desktopOverflow = await page.evaluate(
     () => document.documentElement.scrollWidth > window.innerWidth
   );
+
+  const layoutChecks = await page.evaluate(() => {
+    const footer = document.querySelector("footer");
+    let floatingFooter = false;
+    let footerGapPx = 0;
+    if (footer) {
+      const rect = footer.getBoundingClientRect();
+      const gap = Math.round(window.innerHeight - rect.bottom);
+      if (rect.height > 0 && gap > 40) {
+        floatingFooter = true;
+        footerGapPx = gap;
+      }
+    }
+
+    const unsafeFormLinks = [];
+    for (const form of document.querySelectorAll("form")) {
+      for (const a of form.querySelectorAll("a[href]")) {
+        const href = a.getAttribute("href") || "";
+        const target = (a.getAttribute("target") || "").toLowerCase();
+        if (!href.startsWith("#") && !href.startsWith("mailto:") && target !== "_blank") {
+          unsafeFormLinks.push({
+            href,
+            text: (a.textContent || "").trim().slice(0, 80),
+          });
+        }
+      }
+    }
+
+    return { floatingFooter, footerGapPx, unsafeFormLinks };
+  });
 
   await page.setViewportSize({ width: 768, height: 1024 });
   const tabletOverflow = await page.evaluate(
@@ -444,7 +481,7 @@ async function auditRoute(
   let axeSummary = { available: false, violations: [] };
   try {
     const axeMod = await loadOptionalModule("@axe-core/playwright");
-    const AxeBuilder = axeMod.default || axeMod.AxeBuilder;
+    const AxeBuilder = axeMod.AxeBuilder || axeMod.default?.AxeBuilder || axeMod.default;
     if (AxeBuilder) {
       const axeResults = await new AxeBuilder({ page }).analyze();
       axeSummary = {
@@ -606,7 +643,8 @@ async function auditRoute(
     missingSecurityHeaders: missingHeaders,
     cookies,
     storageInspection,
-    responsiveOverflow: { desktop: desktopOverflow, tablet: tabletOverflow, mobile: mobileOverflow },
+    responsiveOverflow: { wide: wideOverflow, desktop: desktopOverflow, tablet: tabletOverflow, mobile: mobileOverflow },
+    layoutChecks,
     screenshots,
     formsCount: formsInventory.length,
     formsInventory,
@@ -644,7 +682,9 @@ async function main() {
 
   let chromium;
   try {
-    ({ chromium } = await loadOptionalModule("playwright"));
+    const pwMod = await loadOptionalModule("playwright");
+    chromium = pwMod.chromium || pwMod.default?.chromium;
+    if (!chromium) throw new Error("playwright chromium export not found");
   } catch {
     console.error(
       'Playwright is not installed in the current project or Node path. Install with "npm i -D playwright" or run via your Playwright environment.'
@@ -695,8 +735,18 @@ async function main() {
       }`
     );
     console.log(
-      `- Overflow horizontal: desktop=${r.responsiveOverflow.desktop}, tablet=${r.responsiveOverflow.tablet}, mobile=${r.responsiveOverflow.mobile}`
+      `- Overflow horizontal: wide=${r.responsiveOverflow.wide}, desktop=${r.responsiveOverflow.desktop}, tablet=${r.responsiveOverflow.tablet}, mobile=${r.responsiveOverflow.mobile}`
     );
+    if (r.layoutChecks.floatingFooter) {
+      console.log(
+        `- ALERTA UX/Layout: footer flotando (${r.layoutChecks.footerGapPx}px vacios debajo en 1440x900; usa min-height: 100dvh + flex-column).`
+      );
+    }
+    if (r.layoutChecks.unsafeFormLinks.length) {
+      console.log(
+        `- ALERTA UX Formularios: ${r.layoutChecks.unsafeFormLinks.length} enlace(s) dentro de <form> sin target="_blank" (pueden borrar progreso del usuario).`
+      );
+    }
     if (r.screenshots.length) {
       console.log(`- Capturas visuales guardadas (${r.screenshots.length}): ${path.resolve(opts.screenshotsDir)}`);
     }
